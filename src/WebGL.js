@@ -71,15 +71,9 @@ static createTexture(gl, options) {
     gl.bindTexture(target, texture);
 
     if (options.image) {
-        gl.texImage2D(
-            target, 0, iformat,
-            format, type, options.image);
+        gl.texImage2D(target, 0, iformat, format, type, options.image);
     } else {
-        // if options.data == null, just allocate
-        gl.texImage2D(
-            target, 0, iformat,
-            options.width, options.height, 0,
-            format, type, options.data);
+        gl.texImage2D(target, 0, iformat, options.width, options.height, 0, format, type, options.data);
     }
 
     if (options.wrapS) { gl.texParameteri(target, gl.TEXTURE_WRAP_S, options.wrapS); }
@@ -89,6 +83,14 @@ static createTexture(gl, options) {
     if (options.mip) { gl.generateMipmap(target); }
 
     return texture;
+}
+
+static createDefaultTexture(gl) {
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255]));
+    return texture;
+
 }
 
 static createBuffer(gl, options) {
