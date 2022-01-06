@@ -7,11 +7,13 @@ import { PlayerEntity } from "./entities/PlayerEntity.js";
 import { Model } from "./Model.js";
 import { Physics } from "./Physics.js";
 import { Renderer } from "./Renderer.js";
+import { EnemyEntity } from "./entities/EnemyEntity.js";
 
 export class Scene {
     constructor(game) {
         this.game = game;
         this.entities = [];
+        this.newEntities = [];
     }
 
     async init() {
@@ -21,7 +23,7 @@ export class Scene {
         
         //this.cameraEntity = new FreelookEntity();
         this.cameraEntity = new PlayerEntity();
-        this.entities.push(this.cameraEntity);
+        this.addEntity(this.cameraEntity);
         this.renderer.camera = this.cameraEntity.camera;
 
         this.physicsRenderer = new PhysicsDebugRenderer(this.game.gl, this.game.programs);
@@ -29,20 +31,13 @@ export class Scene {
 
         //Load some test stuff for now
         const hightmapModel = Model.heightmap(this.renderer.gl, this.renderer.programs.simple, 32, 32);
-        this.entities.push(new Entity(hightmapModel, null));
+        this.addEntity(new Entity(['Floor'], hightmapModel, null));
         
-        const foxModel = await Model.load(this.renderer.gl, this.renderer.programs.simple, '../res/models/Fox/Fox.gltf', 'fox');
-        const enemyEntity = new Entity(foxModel, new AABB([0, 1, 0], [2, 2, 2]));
-        enemyEntity.position = vec3.fromValues(5, 0, 5);
-        enemyEntity.scale = vec3.fromValues(0.025, 0.025, 0.025);
-        this.entities.push(enemyEntity);
-
-        for(const entity of this.entities) {
-            await entity.init(this);
-        }
+        const enemyEntity = new EnemyEntity(vec3.fromValues(5, 0, -5));
+        this.addEntity(enemyEntity);
     }
 
-    update(delta) {
+    async update(delta) {
         this.physics.update(delta);
 
         for(const entity of this.entities) {
@@ -50,7 +45,14 @@ export class Scene {
         }
 
         //NOTE: Remove entities if they have alive set to false
-        this.entities.filter(entity => entity.alive);
+        this.entities = this.entities.filter(entity => entity.alive === true);
+
+        for(const entity of this.newEntities) {
+            await entity.init(this);
+        }
+
+        this.entities = this.entities.concat(this.newEntities);
+        this.newEntities = [];
     }
 
     render() {
@@ -66,6 +68,11 @@ export class Scene {
         }
 
         this.physicsRenderer.render();
+    }
+
+    addEntity(entity) {
+        this.newEntities.push(entity);
+        entity.scene = this;
     }
 
     resize(width, height) {

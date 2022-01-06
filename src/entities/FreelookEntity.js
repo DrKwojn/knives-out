@@ -4,7 +4,7 @@ import { PhysicsEntity } from "./PhysicsEntity.js";
 
 export class FreelookEntity extends PhysicsEntity {
     constructor() {
-        super(null, null);
+        super(['Camera'], null, null);
 
         this.camera = new ModelCamera();
 

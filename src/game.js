@@ -51,12 +51,12 @@ class Application {
         }
     }
 
-    update() {
+    async update() {
         const t = this.time = Date.now();
         const dt = (this.time - this.startTime) * 0.001;
         this.startTime = this.time;
 
-        this.scene.update(dt);
+        await this.scene.update(dt);
     }
 
     render() {
@@ -69,9 +69,10 @@ class Application {
 
     _update() {
         this._resize();
-        this.update();
-        this.render();
-        requestAnimationFrame(this._update);
+        this.update().then(() => {
+            this.render();
+            requestAnimationFrame(this._update);
+        });
     }
 
     _resize() {

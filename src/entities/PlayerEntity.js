@@ -1,11 +1,12 @@
 import { quat, vec3 } from "../../lib/gl-matrix-module.js";
 import { AABB } from "../AABB.js";
 import { ModelCamera } from "../ModelCamera.js";
+import { KnifeEntity } from "./KnifeEntity.js";
 import { PhysicsEntity } from "./PhysicsEntity.js";
 
 export class PlayerEntity extends PhysicsEntity {
     constructor() {
-        super(null, new AABB([0,1,0], [0.5, 2, 0.5]));
+        super(['Camera', 'Player'], null, new AABB([0,1,0], [0.5, 2, 0.5]));
 
         this.camera = new ModelCamera(vec3.fromValues(0, 1.8, 0));
 
@@ -18,6 +19,8 @@ export class PlayerEntity extends PhysicsEntity {
         this.keydownHandler = this.keydownHandler.bind(this);
         this.keyupHandler = this.keyupHandler.bind(this);
         this.keys = {};
+        this.mouseClicked = [false, false, false, false, false];
+        console.log(this.mouseClicked);
 
         this.walkSpeed = 2.0;
         this.runSpeed = 5.0;
@@ -41,38 +44,46 @@ export class PlayerEntity extends PhysicsEntity {
 
         this.velocity = vec3.create();
         if (this.keys['KeyW']) {
-            //vec3.scaleAndAdd(this.position, this.position, forward, delta);
             vec3.add(this.velocity, this.velocity, forward);
         }
+
         if (this.keys['KeyS']) {
-            //vec3.scaleAndAdd(this.position, this.position, vec3.negate(vec3.create(), forward), delta);
             vec3.sub(this.velocity, this.velocity, forward);
         }
+
         if (this.keys['KeyD']) {
-            //vec3.scaleAndAdd(this.position, this.position, right, delta);
             vec3.add(this.velocity, this.velocity, right);
         }
+
         if (this.keys['KeyA']) {
-            //vec3.scaleAndAdd(this.position, this.position, vec3.negate(vec3.create(), right), delta);
             vec3.sub(this.velocity, this.velocity, right);
         }
 
-        console.log(this.velocity);
-
         this.camera.position = vec3.clone(this.position);
         vec3.add(this.camera.position, this.camera.position, vec3.fromValues(0, 1.8, 0));
+
+        //Shoot
+        if(this.mouseClicked[0]) {
+            const knife = new KnifeEntity(vec3.add(vec3.create(), this.camera.position, this.camera.forward), this.camera.forward);
+            this.scene.addEntity(knife);
+        }
+
+        //Reset clicks
+        this.mouseClicked = [false, false, false, false, false];
     }
 
     enable() {
         document.addEventListener('mousemove', this.mousemoveHandler);
         document.addEventListener('keydown', this.keydownHandler);
         document.addEventListener('keyup', this.keyupHandler);
+        document.addEventListener('click', this.mouseclickHandler.bind(this));
     }
 
     disable() {
         document.removeEventListener('mousemove', this.mousemoveHandler);
         document.removeEventListener('keydown', this.keydownHandler);
         document.removeEventListener('keyup', this.keyupHandler);
+        document.removeEventListener('click', this.mouseclickHandler);
 
         for (let key in this.keys) {
             this.keys[key] = false;
@@ -106,6 +117,12 @@ export class PlayerEntity extends PhysicsEntity {
         const targetZ = -Math.cos(this.yaw) * Math.cos(this.pitch);
         this.camera.forward = vec3.set(vec3.create(), targetX, targetY, targetZ);
         this.camera.right = vec3.cross(this.camera.right, this.camera.forward, this.camera.up);
+    }
+
+    mouseclickHandler(e) {
+        console.log(this);
+        console.log(this.mouseClicked);
+        this.mouseClicked[e.button] = true;
     }
 
     keydownHandler(e) {

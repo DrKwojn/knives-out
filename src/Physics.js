@@ -16,7 +16,10 @@ export class Physics {
         for(const entity of this.scene.entities) {
             for(const other of this.scene.entities) {
                 if(entity !== other && entity.aabb && other.aabb) {
-                    this.resolveCollision(entity, other);
+                    if(!(entity.groups.some((element) => other.ignoreGroups.includes(element)) || 
+                         other.groups.some((element) => entity.ignoreGroups.includes(element)))) {
+                        this.resolveCollision(entity, other);
+                    }
                 }
             }
         }
@@ -90,6 +93,9 @@ export class Physics {
         }
 
         vec3.add(a.position, a.position, minDirection);
+        
+        a.collided(b);
+        b.collided(a);
     }
 
 }
