@@ -27,8 +27,6 @@ class Application {
     async init() {
         const gl = this.gl;
 
-        await Ammo(); //Init physics library
-
         this.programs = WebGL.buildPrograms(gl, shaders);
 
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);

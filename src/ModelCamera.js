@@ -2,7 +2,7 @@ import { mat4, vec3 } from "./../lib/gl-matrix-module.js";
 
 //TODO: Constructor should take position and direction as parameters so we can set the camera at a desired position
 export class ModelCamera {
-    constructor() {
+    constructor(position) {
         this.fov = 1.5;
         this.aspect = 1;
         this.near = 0.01;
@@ -11,7 +11,7 @@ export class ModelCamera {
         this.projection = mat4.create();
         this.calculateProjection();
 
-        this.position = vec3.create();
+        this.position = position || vec3.create();
         this.up = vec3.set(vec3.create(), 0.0, 1.0, 0.0);
         this.right = vec3.create();
         this.forward = vec3.create();

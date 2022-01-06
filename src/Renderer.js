@@ -12,15 +12,15 @@ export class Renderer {
         this.defaultSampler = new TextureSampler(gl);
 
         this.camera = null;
+    }
+
+    render() {
+        const gl = this.gl;
 
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
         //gl.clearColor(1.0, 1.0, 1.0, 1.0);
         gl.clearColor(0.2, 0.1, 0.3, 1.0);
-    }
-
-    render() {
-        const gl = this.gl;
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }

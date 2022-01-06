@@ -1,12 +1,13 @@
-import { vec3 } from "../../lib/gl-matrix-module.js";
+import { quat, vec3 } from "../../lib/gl-matrix-module.js";
+import { AABB } from "../AABB.js";
 import { ModelCamera } from "../ModelCamera.js";
 import { PhysicsEntity } from "./PhysicsEntity.js";
 
-export class FreelookEntity extends PhysicsEntity {
+export class PlayerEntity extends PhysicsEntity {
     constructor() {
-        super(null, null);
+        super(null, new AABB([0,1,0], [0.5, 2, 0.5]));
 
-        this.camera = new ModelCamera();
+        this.camera = new ModelCamera(vec3.fromValues(0, 1.8, 0));
 
         this.yaw   = 0.0;
         this.pitch = 0.0;
@@ -17,6 +18,9 @@ export class FreelookEntity extends PhysicsEntity {
         this.keydownHandler = this.keydownHandler.bind(this);
         this.keyupHandler = this.keyupHandler.bind(this);
         this.keys = {};
+
+        this.walkSpeed = 2.0;
+        this.runSpeed = 5.0;
     }
 
     async init(scene) {
@@ -24,18 +28,39 @@ export class FreelookEntity extends PhysicsEntity {
     }
 
     update(delta) {
+        const forward = vec3.transformQuat(vec3.create(), vec3.fromValues(0, 0, -1), this.rotation);
+        const right = vec3.transformQuat(vec3.create(), vec3.fromValues(1, 0, 0), this.rotation);
+
+        if(this.keys['ShiftLeft']) {
+            vec3.scale(forward, forward, this.runSpeed);
+            vec3.scale(right, right, this.runSpeed);
+        } else {
+            vec3.scale(forward, forward, this.walkSpeed);
+            vec3.scale(right, right, this.walkSpeed);
+        }
+
+        this.velocity = vec3.create();
         if (this.keys['KeyW']) {
-            vec3.scaleAndAdd(this.camera.position, this.camera.position, this.camera.forward, delta);
+            //vec3.scaleAndAdd(this.position, this.position, forward, delta);
+            vec3.add(this.velocity, this.velocity, forward);
         }
         if (this.keys['KeyS']) {
-            vec3.scaleAndAdd(this.camera.position, this.camera.position, vec3.negate(vec3.create(), this.camera.forward), delta);
+            //vec3.scaleAndAdd(this.position, this.position, vec3.negate(vec3.create(), forward), delta);
+            vec3.sub(this.velocity, this.velocity, forward);
         }
         if (this.keys['KeyD']) {
-            vec3.scaleAndAdd(this.camera.position, this.camera.position, this.camera.right, delta);
+            //vec3.scaleAndAdd(this.position, this.position, right, delta);
+            vec3.add(this.velocity, this.velocity, right);
         }
         if (this.keys['KeyA']) {
-            vec3.scaleAndAdd(this.camera.position, this.camera.position, vec3.negate(vec3.create(), this.camera.right), delta);
+            //vec3.scaleAndAdd(this.position, this.position, vec3.negate(vec3.create(), right), delta);
+            vec3.sub(this.velocity, this.velocity, right);
         }
+
+        console.log(this.velocity);
+
+        this.camera.position = vec3.clone(this.position);
+        vec3.add(this.camera.position, this.camera.position, vec3.fromValues(0, 1.8, 0));
     }
 
     enable() {
@@ -73,6 +98,8 @@ export class FreelookEntity extends PhysicsEntity {
         }
 
         this.yaw = ((this.yaw % twopi) + twopi) % twopi;
+
+        quat.setAxisAngle(this.rotation, vec3.fromValues(0, 1, 0), this.yaw);
 
         const targetX = -Math.sin(this.yaw) * Math.cos(this.pitch);
         const targetY =  Math.sin(this.pitch);
