@@ -66,7 +66,7 @@ export class PlayerEntity extends PhysicsEntity {
             vec3.sub(this.velocity, this.velocity, right);
         }
 
-        if (this.keys['KeyA'] || this.keys['KeyD'] || this.keys['KeyS'] || this.keys['KeyW']){
+        if (keys['KeyA'] || keys['KeyD'] || keys['KeyS'] || keys['KeyW']){
             this.audio.play();
         }
         else {
