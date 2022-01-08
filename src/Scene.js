@@ -9,6 +9,7 @@ import { Physics } from "./Physics.js";
 import { Renderer } from "./Renderer.js";
 import { EnemyEntity } from "./entities/EnemyEntity.js";
 import { MapEntity } from "./entities/MapEntity.js";
+import {MazeBuilder} from "./MazeBuilder.js";
 
 export class Scene {
     constructor(game) {
@@ -37,15 +38,19 @@ export class Scene {
         this.physicsRenderer = new PhysicsDebugRenderer(this.game.gl, this.game.programs);
         this.physicsRenderer.camera = this.cameraEntity.camera;
 
-        const mapGrid = [
-            1, 1, 1, 1, 1,
-            1, 0, 0, 0, 1,
-            1, 0, 1, 0, 1,
-            1, 0, 0, 0, 1,
-            1, 1, 1, 0, 1
-        ];
+        const mazeSize = 11; // odd number
+        const maze = new MazeBuilder(Math.floor(mazeSize/2), Math.floor(mazeSize/2));
+        const mapGrid = maze.maze.flat();
 
-        this.addEntity(new MapEntity(mapGrid, 5))
+        // const mapGrid = [
+        //     1, 1, 1, 1, 1,
+        //     1, 0, 0, 0, 1,
+        //     1, 0, 1, 0, 1,
+        //     1, 0, 0, 0, 1,
+        //     1, 1, 1, 0, 1
+        // ];
+
+        this.addEntity(new MapEntity(mapGrid, mazeSize));
         
         const enemyEntity = new EnemyEntity(vec3.fromValues(5, 0, -5));
         this.addEntity(enemyEntity);
