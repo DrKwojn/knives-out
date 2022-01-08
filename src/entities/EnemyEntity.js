@@ -8,13 +8,13 @@ export class EnemyEntity extends PhysicsEntity {
         super(['Enemy'], null, new AABB([0, 1, 0], [2, 2, 2]));
 
         this.position = position;
-        this.scale = vec3.fromValues(0.025, 0.025, 0.025);
+        //this.scale = vec3.fromValues(0.025, 0.025, 0.025);
 
         this.life = 100;
     }
 
     async init(scene) {
-        this.model = await Model.load(scene.game.gl, scene.game.programs.simple, '../res/models/Fox/Fox.gltf', 'fox');
+        this.model = await Model.load(scene.game.gl, scene.game.programs.simple, '../res/models/figurehead/scene.gltf', 3);
         console.log(this.model);
     }
 

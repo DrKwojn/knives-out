@@ -40,6 +40,7 @@ export class AssetManager {
             image.addEventListener('error', reject);
             image.src = url;
         });
+        console.log(image);
 
         this.imageAssets.set(url, image);
         

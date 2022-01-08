@@ -15,12 +15,12 @@ export class PlayerEntity extends PhysicsEntity {
 
         this.mouseSensitivity = 0.002;
 
-        this.mousemoveHandler = this.mousemoveHandler.bind(this);
-        this.keydownHandler = this.keydownHandler.bind(this);
-        this.keyupHandler = this.keyupHandler.bind(this);
-        this.keys = {};
-        this.mouseClicked = [false, false, false, false, false];
-        console.log(this.mouseClicked);
+        // this.mousemoveHandler = this.mousemoveHandler.bind(this);
+        // this.mouseclickHandler = this.mouseclickHandler.bind(this);
+        // this.keydownHandler = this.keydownHandler.bind(this);
+        // this.keyupHandler = this.keyupHandler.bind(this);
+        // this.keys = {};
+        // this.mouseClicked = [false, false, false, false, false];
 
         this.walkSpeed = 2.0;
         this.runSpeed = 5.0;
@@ -34,7 +34,12 @@ export class PlayerEntity extends PhysicsEntity {
         const forward = vec3.transformQuat(vec3.create(), vec3.fromValues(0, 0, -1), this.rotation);
         const right = vec3.transformQuat(vec3.create(), vec3.fromValues(1, 0, 0), this.rotation);
 
-        if(this.keys['ShiftLeft']) {
+        const keys = this.scene.game.keys;
+        if(keys.length > 0) {
+            console.log(keys);
+        }
+
+        if(keys['ShiftLeft']) {
             vec3.scale(forward, forward, this.runSpeed);
             vec3.scale(right, right, this.runSpeed);
         } else {
@@ -43,19 +48,19 @@ export class PlayerEntity extends PhysicsEntity {
         }
 
         this.velocity = vec3.create();
-        if (this.keys['KeyW']) {
+        if (keys['KeyW']) {
             vec3.add(this.velocity, this.velocity, forward);
         }
 
-        if (this.keys['KeyS']) {
+        if (keys['KeyS']) {
             vec3.sub(this.velocity, this.velocity, forward);
         }
 
-        if (this.keys['KeyD']) {
+        if (keys['KeyD']) {
             vec3.add(this.velocity, this.velocity, right);
         }
 
-        if (this.keys['KeyA']) {
+        if (keys['KeyA']) {
             vec3.sub(this.velocity, this.velocity, right);
         }
 
@@ -63,34 +68,13 @@ export class PlayerEntity extends PhysicsEntity {
         vec3.add(this.camera.position, this.camera.position, vec3.fromValues(0, 1.8, 0));
 
         //Shoot
-        if(this.mouseClicked[0]) {
+        if(this.scene.game.mouseClicked[0]) {
             const knife = new KnifeEntity(vec3.add(vec3.create(), this.camera.position, this.camera.forward), this.camera.forward);
             this.scene.addEntity(knife);
         }
-
-        //Reset clicks
-        this.mouseClicked = [false, false, false, false, false];
     }
 
-    enable() {
-        document.addEventListener('mousemove', this.mousemoveHandler);
-        document.addEventListener('keydown', this.keydownHandler);
-        document.addEventListener('keyup', this.keyupHandler);
-        document.addEventListener('click', this.mouseclickHandler.bind(this));
-    }
-
-    disable() {
-        document.removeEventListener('mousemove', this.mousemoveHandler);
-        document.removeEventListener('keydown', this.keydownHandler);
-        document.removeEventListener('keyup', this.keyupHandler);
-        document.removeEventListener('click', this.mouseclickHandler);
-
-        for (let key in this.keys) {
-            this.keys[key] = false;
-        }
-    }
-
-    mousemoveHandler(e) {
+    mousemove(e) {
         const dx = e.movementX;
         const dy = e.movementY;
 
@@ -117,19 +101,5 @@ export class PlayerEntity extends PhysicsEntity {
         const targetZ = -Math.cos(this.yaw) * Math.cos(this.pitch);
         this.camera.forward = vec3.set(vec3.create(), targetX, targetY, targetZ);
         this.camera.right = vec3.cross(this.camera.right, this.camera.forward, this.camera.up);
-    }
-
-    mouseclickHandler(e) {
-        console.log(this);
-        console.log(this.mouseClicked);
-        this.mouseClicked[e.button] = true;
-    }
-
-    keydownHandler(e) {
-        this.keys[e.code] = true;
-    }
-
-    keyupHandler(e) {
-        this.keys[e.code] = false;
     }
 }

@@ -5,6 +5,7 @@ export class PhysicsEntity extends Entity {
     constructor(groups, model, aabb) {
         super(groups, model, aabb);
 
+        this.movable = true;
         this.velocity = vec3.create();
     }
 }
