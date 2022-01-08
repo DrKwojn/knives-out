@@ -1,5 +1,6 @@
 import { vec3 } from "../../lib/gl-matrix-module.js";
 import { AABB } from "../AABB.js";
+import { AssetManager } from "../AssetManager.js";
 import { Model } from "../Model.js";
 import { EnemyEntity } from "./EnemyEntity.js";
 import { PhysicsEntity } from "./PhysicsEntity.js";
@@ -20,8 +21,9 @@ export class KnifeEntity extends PhysicsEntity {
 
     async init(scene) {
         this.model = await Model.load(scene.game.gl, scene.game.programs.simple, '../res/models/knife/machete+kuk-ri.gltf', 0);
-        const audio = new Audio("../res/sound/knife_throw2.wav");
-        await audio.play();
+
+        this.throwSound = await AssetManager.getAudio("../res/sound/knife_throw2.wav");
+        this.hitSound = await AssetManager.getAudio("../res/sound/knife_hit.wav");
     }
 
     update(delta) {
@@ -29,14 +31,16 @@ export class KnifeEntity extends PhysicsEntity {
         if(this.lifetime <= 0.0) {
             this.alive = false;
         }
+
+        this.throwSound.play();
     }
 
     collided(entity) {
-        const audio = new Audio("../res/sound/knife_hit.wav");
-        audio.play();
+        this.hitSound.play();
         if(entity instanceof EnemyEntity) {
             entity.life -= 20;
-            this.alive = false;
         }
+
+        this.alive = false;
     }
 }

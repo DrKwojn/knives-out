@@ -3,6 +3,7 @@ export class AssetManager {
     static jsonAssets = new Map();
     static bufferAssets = new Map();
     static imageAssets = new Map();
+    static audioAssets = new Map();
 
     static async getJson(path) {
         const url = path instanceof URL ? path : new URL(path, window.location);
@@ -44,5 +45,23 @@ export class AssetManager {
         this.imageAssets.set(url.href, image);
         
         return this.imageAssets.get(url.href);
+    }
+
+    static async getAudio(path) {
+        const url = path instanceof URL ? path : new URL(path, window.location);
+        if (this.audioAssets.has(url.href)) {
+            const newAudio = this.audioAssets.get(url.href).cloneNode(true);
+            await newAudio.load();
+            return newAudio;
+        }
+
+        const audio = new Audio(url);
+
+        this.audioAssets.set(url.href, audio);
+        
+        const newAudio = this.audioAssets.get(url.href).cloneNode(true);
+        await newAudio.load();
+
+        return newAudio;
     }
 }

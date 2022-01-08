@@ -19,13 +19,19 @@ export class MapEntity extends Entity{
             const y = Math.floor(i / this.gridSize);
             const value = this.grid[i];
             if(value == 1) {
-                //console.log(x + ' ' + y);
                 const entity = new Entity(['Map'], null, new AABB([0, this.cellHeight / 2, 0], [this.cellSize, this.cellHeight, this.cellSize]));
                 entity.position = vec3.fromValues(offset + x * this.cellSize, 0, offset + y * this.cellSize);
                 scene.addEntity(entity);
-                //console.log(entity.position);
             }
         }
+
+        const floorEntity = new Entity(['Map'], null, new AABB([0, -0.5, 0], [this.cellSize * this.gridSize, 1, this.cellSize * this.gridSize]))
+        floorEntity.position = vec3.fromValues(-2, 0, -2);
+        scene.addEntity(floorEntity);
+
+        const ceilEntity = new Entity(['Map'], null, new AABB([0, 0.5, 0], [this.cellSize * this.gridSize, 1, this.cellSize * this.gridSize]))
+        ceilEntity.position = vec3.fromValues(- this.cellSize / 2, this.cellHeight, - this.cellSize / 2);
+        scene.addEntity(ceilEntity);
 
         this.model = await Model.map(scene.game.gl, scene.game.programs.simple, this.grid, this.gridSize, this.cellSize, this.cellHeight);
     }

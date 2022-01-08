@@ -1,5 +1,6 @@
 import { quat, vec3 } from "../../lib/gl-matrix-module.js";
 import { AABB } from "../AABB.js";
+import { AssetManager } from "../AssetManager.js";
 import { ModelCamera } from "../ModelCamera.js";
 import { KnifeEntity } from "./KnifeEntity.js";
 import { PhysicsEntity } from "./PhysicsEntity.js";
@@ -24,12 +25,11 @@ export class PlayerEntity extends PhysicsEntity {
 
         this.walkSpeed = 2.0;
         this.runSpeed = 5.0;
-
-        this.audio = new Audio("../res/sound/Footsteps_Sound_Effect.wav");
     }
 
     async init(scene) {
-
+        this.audio = await AssetManager.getAudio("../res/sound/Footsteps_Sound_Effect.wav");
+        this.audio.volume = 0.2;
     }
 
     update(delta) {
