@@ -41,7 +41,9 @@
             ]
         },
         {
-            "mesh" : 0
+            "name" : "monkey",
+            "mesh" : 0,
+            "skin": 0
         }
     ],
     "cameras" : [

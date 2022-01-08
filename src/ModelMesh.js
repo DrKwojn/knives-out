@@ -35,6 +35,7 @@ export class ModelMesh {
         const attributeMap = {
             POSITION   : 0,
             TEXCOORD_0 : 1,
+            NORMAL     : 2,
         };        
 
         this.attributes = [];

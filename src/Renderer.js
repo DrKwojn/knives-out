@@ -1,4 +1,4 @@
-import { mat4 } from "../lib/gl-matrix-module.js";
+import { vec3, mat4 } from "../lib/gl-matrix-module.js";
 import { WebGL } from "./WebGL.js";
 import { TextureSampler } from "./Texture.js";
 
@@ -14,7 +14,7 @@ export class Renderer {
         this.camera = null;
     }
 
-    render() {
+    render(light) {
         const gl = this.gl;
 
         gl.enable(gl.DEPTH_TEST);
@@ -23,6 +23,14 @@ export class Renderer {
         gl.clearColor(0.2, 0.1, 0.3, 1.0);
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        const program = this.programs.phong;
+        gl.useProgram(program.program);
+
+        gl.uniform3fv(program.uniforms.uLightPosition, light.position);
+        let color = vec3.clone(light.color);
+        vec3.scale(color, color, 1.0 / 255.0);
+        gl.uniform3fv(program.uniforms.uLightColor,  color);
     }
 
     renderModel(matrix, model) {
@@ -43,11 +51,11 @@ export class Renderer {
             gl.uniform1i(mesh.program.uniforms.uTexture, 0);
 
             const texture = material.colorTexture;
-            if(texture) {
+            if (texture) {
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, texture.index);
                 gl.bindSampler(0, texture.sampler.index);
-            }else {
+            } else {
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, this.defaultTexture);
                 gl.bindSampler(0, this.defaultSampler.index);

@@ -20,7 +20,6 @@ export class PlayerEntity extends PhysicsEntity {
         this.keyupHandler = this.keyupHandler.bind(this);
         this.keys = {};
         this.mouseClicked = [false, false, false, false, false];
-        console.log(this.mouseClicked);
 
         this.walkSpeed = 2.0;
         this.runSpeed = 5.0;

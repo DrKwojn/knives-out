@@ -27,13 +27,13 @@ export class Entity {
     }
 
     render(renderer) {
-        if(this.model) {
+        if (this.model) {
             renderer.renderModel(this.getMatrix(), this.model);
         }
     }
 
     collided(entity) {
-        console.log(this);
+        
     }
 
     getMatrix() {

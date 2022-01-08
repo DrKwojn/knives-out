@@ -97,4 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const app = new Application(canvas);
     const gui = new GUI();
     gui.add(app, 'enableCamera');
+
+    // Light controls
+    gui.addColor(app.scene.lightEntity, 'color');
+    for (let i = 0; i < 3; i++) {
+        gui.add(app.scene.lightEntity.position, i, -10.0, 10.0).name('position.' + String.fromCharCode('x'.charCodeAt(0) + i));
+    }
 });

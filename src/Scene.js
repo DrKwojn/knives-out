@@ -8,6 +8,7 @@ import { Model } from "./Model.js";
 import { Physics } from "./Physics.js";
 import { Renderer } from "./Renderer.js";
 import { EnemyEntity } from "./entities/EnemyEntity.js";
+import { LightEntity } from "./entities/LightEntity.js";
 
 export class Scene {
     constructor(game) {
@@ -20,6 +21,9 @@ export class Scene {
         this.physics = new Physics(this);
 
         this.renderer = new Renderer(this.game.gl, this.game.programs);
+
+        this.lightEntity = new LightEntity();
+        this.addEntity(this.lightEntity);
         
         //this.cameraEntity = new FreelookEntity();
         this.cameraEntity = new PlayerEntity();
@@ -56,13 +60,13 @@ export class Scene {
     }
 
     render() {
-        this.renderer.render();
+        this.renderer.render(this.lightEntity);
         for(const entity of this.entities) {
             entity.render(this.renderer);
         }
 
         for(const entity of this.entities) {
-            if(entity.aabb) {
+            if (entity.aabb) {
                 this.physicsRenderer.addAABB(entity.position, entity.aabb, [1.0, 0.0, 0.0, 1.0]);
             }
         }
