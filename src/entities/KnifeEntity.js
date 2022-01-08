@@ -8,10 +8,10 @@ export class KnifeEntity extends PhysicsEntity {
     constructor(position, forward) {
         super(['Knife'], null, new AABB([0, 0, 0], [0.125, 0.125, 0.125]));
 
-        this.scale = vec3.fromValues(0.0025, 0.0025, 0.0025);
+        this.scale = vec3.fromValues(0.025, 0.025, 0.025);
 
-        this.lifetime = 5.0;
-        this.speed = 10.0;
+        this.lifetime = 10.0;
+        this.speed = 3.0;
         this.ignoreGroups = ['Player', 'Knife'];
 
         this.position = position;
@@ -19,7 +19,9 @@ export class KnifeEntity extends PhysicsEntity {
     }
 
     async init(scene) {
-        this.model = await Model.load(scene.game.gl, scene.game.programs.simple, '../res/models/Fox/Fox.gltf', 'fox');
+        this.model = await Model.load(scene.game.gl, scene.game.programs.simple, '../res/models/knife/machete+kuk-ri.gltf', 0);
+        const audio = new Audio("../res/sound/knife_throw2.wav");
+        await audio.play();
     }
 
     update(delta) {
@@ -30,6 +32,8 @@ export class KnifeEntity extends PhysicsEntity {
     }
 
     collided(entity) {
+        const audio = new Audio("../res/sound/knife_hit.wav");
+        audio.play();
         if(entity instanceof EnemyEntity) {
             entity.life -= 20;
             this.alive = false;

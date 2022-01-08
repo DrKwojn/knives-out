@@ -24,6 +24,8 @@ export class PlayerEntity extends PhysicsEntity {
 
         this.walkSpeed = 2.0;
         this.runSpeed = 5.0;
+
+        this.audio = new Audio("../res/sound/Footsteps_Sound_Effect.wav");
     }
 
     async init(scene) {
@@ -57,6 +59,13 @@ export class PlayerEntity extends PhysicsEntity {
 
         if (this.keys['KeyA']) {
             vec3.sub(this.velocity, this.velocity, right);
+        }
+
+        if (this.keys['KeyA'] || this.keys['KeyD'] || this.keys['KeyS'] || this.keys['KeyW']){
+            this.audio.play();
+        }
+        else {
+            this.audio.pause();
         }
 
         this.camera.position = vec3.clone(this.position);

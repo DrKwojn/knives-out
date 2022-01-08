@@ -11,6 +11,7 @@ export class EnemyEntity extends PhysicsEntity {
         this.scale = vec3.fromValues(0.025, 0.025, 0.025);
 
         this.life = 100;
+        this.dead_sound = new Audio("../res/sound/Coin Flip _ Free Sound Effect.wav");
     }
 
     async init(scene) {
@@ -22,6 +23,7 @@ export class EnemyEntity extends PhysicsEntity {
         if(this.life <= 0) {
             console.log('dead');
             this.alive = false;
+            this.dead_sound.play();
         }
     }
 }
