@@ -292,7 +292,7 @@ export class Model {
         const matrix = mat4.create();
         const material = new Material(gl);
 
-        const image = await AssetManager.getImage('../res/textures/map.png');
+        const image = await AssetManager.getImage('../res/textures/map2.png');
         const sampler = new TextureSampler(gl, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT);
         material.colorTexture = new Texture(gl, image, sampler);
         
