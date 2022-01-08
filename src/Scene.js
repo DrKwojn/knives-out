@@ -8,13 +8,16 @@ import { Model } from "./Model.js";
 import { Physics } from "./Physics.js";
 import { Renderer } from "./Renderer.js";
 import { EnemyEntity } from "./entities/EnemyEntity.js";
-import { LightEntity } from "./entities/LightEntity.js";
+import { MapEntity } from "./entities/MapEntity.js";
+import { MazeBuilder } from "./MazeBuilder.js";
 
 export class Scene {
     constructor(game) {
         this.game = game;
         this.entities = [];
         this.newEntities = [];
+
+        this.debugDraw = false;
     }
 
     async init() {
@@ -25,17 +28,32 @@ export class Scene {
         this.lightEntity = new LightEntity();
         this.addEntity(this.lightEntity);
         
-        //this.cameraEntity = new FreelookEntity();
-        this.cameraEntity = new PlayerEntity();
-        this.addEntity(this.cameraEntity);
+        this.freelookCameraEntity = new FreelookEntity();
+        this.freelookCameraEntity.enabled = false;
+        this.addEntity(this.freelookCameraEntity);
+
+        this.playerCameraEntity = new PlayerEntity();
+        this.addEntity(this.playerCameraEntity);
+
+        this.cameraEntity = this.playerCameraEntity
         this.renderer.camera = this.cameraEntity.camera;
 
         this.physicsRenderer = new PhysicsDebugRenderer(this.game.gl, this.game.programs);
         this.physicsRenderer.camera = this.cameraEntity.camera;
 
-        //Load some test stuff for now
-        const hightmapModel = Model.heightmap(this.renderer.gl, this.renderer.programs.simple, 32, 32);
-        this.addEntity(new Entity(['Floor'], hightmapModel, null));
+        const mazeSize = 11; // odd number
+        const maze = new MazeBuilder(Math.floor(mazeSize/2), Math.floor(mazeSize/2));
+        const mapGrid = maze.maze.flat();
+
+        // const mapGrid = [
+        //     1, 1, 1, 1, 1,
+        //     1, 0, 0, 0, 1,
+        //     1, 0, 1, 0, 1,
+        //     1, 0, 0, 0, 1,
+        //     1, 1, 1, 0, 1
+        // ];
+
+        this.addEntity(new MapEntity(mapGrid, mazeSize));
         
         const enemyEntity = new EnemyEntity(vec3.fromValues(5, 0, -5));
         this.addEntity(enemyEntity);
@@ -45,7 +63,9 @@ export class Scene {
         this.physics.update(delta);
 
         for(const entity of this.entities) {
-            entity.update(delta);
+            if(entity.enabled) {
+                entity.update(delta);
+            }
         }
 
         //NOTE: Remove entities if they have alive set to false
@@ -57,21 +77,39 @@ export class Scene {
 
         this.entities = this.entities.concat(this.newEntities);
         this.newEntities = [];
+
+        if(this.game.keysPressed['KeyK']) {
+            this.toggleCamera();
+        }
+
+        if(this.game.keysPressed['KeyP']) {
+            this.debugDraw = !this.debugDraw;
+        }
     }
 
     render() {
         this.renderer.render(this.lightEntity);
         for(const entity of this.entities) {
-            entity.render(this.renderer);
-        }
-
-        for(const entity of this.entities) {
-            if (entity.aabb) {
-                this.physicsRenderer.addAABB(entity.position, entity.aabb, [1.0, 0.0, 0.0, 1.0]);
+            if(entity.enabled) {
+                entity.render(this.renderer);
             }
         }
 
-        this.physicsRenderer.render();
+        if(this.debugDraw) {
+            for(const entity of this.entities) {
+                if(entity.enabled && entity.aabb) {
+                    this.physicsRenderer.addAABB(entity.position, entity.aabb, [1.0, 0.0, 0.0, 1.0]);
+                }
+            }
+    
+            this.physicsRenderer.render();
+        }
+    }
+
+    mousemove(e) {
+        for(const entity of this.entities) {
+            entity.mousemove(e);
+        };
     }
 
     addEntity(entity) {
@@ -83,11 +121,31 @@ export class Scene {
         this.cameraEntity.camera.calculateAspectRatio(width, height);
     }
 
+    toggleCamera() {
+        if(this.cameraEntity.enabled) {
+            this.freelookCameraEntity.enabled = !this.freelookCameraEntity.enabled;
+            this.playerCameraEntity.enabled = !this.playerCameraEntity.enabled;
+
+            if(this.freelookCameraEntity.enabled) {
+                this.cameraEntity = this.freelookCameraEntity;
+            } 
+
+            if(this.playerCameraEntity.enabled) {
+                this.cameraEntity = this.playerCameraEntity;
+                
+            }
+            
+            this.renderer.camera = this.cameraEntity.camera;
+            this.physicsRenderer.camera = this.cameraEntity.camera;
+            this.game.forceResize();
+        }
+    }
+
     focusGained() {
-        this.cameraEntity.enable();
+        this.cameraEntity.enabled = true;
     }
 
     focusLost() {
-        this.cameraEntity.disable();
+        this.cameraEntity.enabled = false;
     }
 }

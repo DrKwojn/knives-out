@@ -16,6 +16,9 @@ export class Entity {
         this.model = model;
 
         this.aabb = aabb;
+        this.movable = false;
+
+        this.enabled = true;
     }
 
     async init(scene) {
@@ -32,8 +35,11 @@ export class Entity {
         }
     }
 
+    mousemove(e) {
+
+    }
+
     collided(entity) {
-        
     }
 
     getMatrix() {

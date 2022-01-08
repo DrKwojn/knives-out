@@ -11,12 +11,14 @@ export class FreelookEntity extends PhysicsEntity {
         this.yaw   = 0.0;
         this.pitch = 0.0;
 
+        this.speed = 10.0;
+
         this.mouseSensitivity = 0.002;
 
-        this.mousemoveHandler = this.mousemoveHandler.bind(this);
-        this.keydownHandler = this.keydownHandler.bind(this);
-        this.keyupHandler = this.keyupHandler.bind(this);
-        this.keys = {};
+        // this.mousemoveHandler = this.mousemoveHandler.bind(this);
+        // this.keydownHandler = this.keydownHandler.bind(this);
+        // this.keyupHandler = this.keyupHandler.bind(this);
+        // this.keys = {};
     }
 
     async init(scene) {
@@ -24,37 +26,23 @@ export class FreelookEntity extends PhysicsEntity {
     }
 
     update(delta) {
-        if (this.keys['KeyW']) {
-            vec3.scaleAndAdd(this.camera.position, this.camera.position, this.camera.forward, delta);
+        const keys = this.scene.game.keys;
+
+        if (keys['KeyW']) {
+            vec3.scaleAndAdd(this.camera.position, this.camera.position, this.camera.forward, delta * this.speed);
         }
-        if (this.keys['KeyS']) {
-            vec3.scaleAndAdd(this.camera.position, this.camera.position, vec3.negate(vec3.create(), this.camera.forward), delta);
+        if (keys['KeyS']) {
+            vec3.scaleAndAdd(this.camera.position, this.camera.position, vec3.negate(vec3.create(), this.camera.forward), delta * this.speed);
         }
-        if (this.keys['KeyD']) {
-            vec3.scaleAndAdd(this.camera.position, this.camera.position, this.camera.right, delta);
+        if (keys['KeyD']) {
+            vec3.scaleAndAdd(this.camera.position, this.camera.position, this.camera.right, delta * this.speed);
         }
-        if (this.keys['KeyA']) {
-            vec3.scaleAndAdd(this.camera.position, this.camera.position, vec3.negate(vec3.create(), this.camera.right), delta);
+        if (keys['KeyA']) {
+            vec3.scaleAndAdd(this.camera.position, this.camera.position, vec3.negate(vec3.create(), this.camera.right), delta * this.speed);
         }
     }
 
-    enable() {
-        document.addEventListener('mousemove', this.mousemoveHandler);
-        document.addEventListener('keydown', this.keydownHandler);
-        document.addEventListener('keyup', this.keyupHandler);
-    }
-
-    disable() {
-        document.removeEventListener('mousemove', this.mousemoveHandler);
-        document.removeEventListener('keydown', this.keydownHandler);
-        document.removeEventListener('keyup', this.keyupHandler);
-
-        for (let key in this.keys) {
-            this.keys[key] = false;
-        }
-    }
-
-    mousemoveHandler(e) {
+    mousemove(e) {
         const dx = e.movementX;
         const dy = e.movementY;
 
@@ -79,13 +67,5 @@ export class FreelookEntity extends PhysicsEntity {
         const targetZ = -Math.cos(this.yaw) * Math.cos(this.pitch);
         this.camera.forward = vec3.set(vec3.create(), targetX, targetY, targetZ);
         this.camera.right = vec3.cross(this.camera.right, this.camera.forward, this.camera.up);
-    }
-
-    keydownHandler(e) {
-        this.keys[e.code] = true;
-    }
-
-    keyupHandler(e) {
-        this.keys[e.code] = false;
     }
 }
