@@ -72,6 +72,8 @@ export class Scene {
             this.addEntity(lightEntity);
             this.renderer.lights.push(lightEntity);
         }
+
+        this.game.forceResize();
     }
 
     async update(delta) {
