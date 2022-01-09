@@ -4,11 +4,10 @@ import { shaders } from './shaders.js';
 import { WebGL } from './WebGL.js';
 
 class Application {
-    constructor(canvas, glOptions, mainmenu) {
+    constructor(canvas, glOptions) {
         this._update = this._update.bind(this);
 
         this.canvas = canvas;
-        this.mainmenu = mainmenu;
         
         this.gl = null;
         try {
@@ -49,6 +48,11 @@ class Application {
 
         this.scene = new Scene(this);
         await this.scene.init();
+
+        // HUD
+        this.enemiesKilled = 0;
+        scoreboard[2].innerHTML = this.enemiesKilled;
+        this.displayTimeLeft(32143215);
     }
 
     enable() {
@@ -162,15 +166,24 @@ class Application {
     forceResize() {
         this._resize();
     }
+
+    displayTimeLeft(miliseconds) {
+        let time = new Date(miliseconds);
+        let minutes = time.getMinutes().toString();
+        let seconds = time.getSeconds().toString();
+        scoreboard[1].innerHTML = minutes.concat(":", seconds);
+    }
 }
+
+const scoreboard = document.getElementsByTagName('label');
 
 document.getElementById('startBtn').addEventListener("click", function() {
     const canvas = document.querySelector('canvas');
     const app = new Application(canvas);
     app.enableCamera();
 
-    document.getElementById('startBtn').style.display = "none";
-    document.getElementById('txtName').style.display = "none";
+    document.getElementsByClassName('mainmenu')[0].style.display = "none";
+    document.getElementsByClassName('scoreboard')[0].style.visibility = "visible";
 });
 
 // document.addEventListener('DOMContentLoaded', () => {
