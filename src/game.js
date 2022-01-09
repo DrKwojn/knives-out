@@ -52,7 +52,7 @@ class Application {
         // HUD
         this.enemiesKilled = 0;
         scoreboard[2].innerHTML = this.enemiesKilled;
-        this.displayTimeLeft(2143215);
+        this.displayTimeLeft(21400);
 
         //this.displayGameOver();
     }
@@ -169,11 +169,8 @@ class Application {
         this._resize();
     }
 
-    displayTimeLeft(miliseconds) {
-        let time = new Date(miliseconds);
-        let minutes = time.getMinutes().toString();
-        let seconds = time.getSeconds().toString();
-        scoreboard[1].innerHTML = minutes.concat(":", seconds);
+    displayTimeLeft(milliseconds) {
+        scoreboard[1].innerHTML = new Date(milliseconds).toISOString().slice(14,19);
     }
 
     displayGameOver() {
