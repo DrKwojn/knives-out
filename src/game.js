@@ -56,6 +56,8 @@ class Application {
         // HUD
         scoreboard[2].innerHTML = this.score;
         this.displayTimeLeft(this.gameTime * 1000);
+
+        //this.displayGameOver();
     }
 
     enable() {
@@ -190,6 +192,10 @@ class Application {
         let seconds = time.getSeconds().toString();
         scoreboard[1].innerHTML = minutes.concat(":", seconds);
     }
+
+    displayGameOver() {
+        document.getElementsByClassName('gameover')[0].style.display = "block";
+    }
 }
 
 const scoreboard = document.getElementsByTagName('label');
@@ -203,9 +209,6 @@ document.getElementById('startBtn').addEventListener("click", function() {
     document.getElementsByClassName('scoreboard')[0].style.visibility = "visible";
 });
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     const canvas = document.querySelector('canvas');
-//     const app = new Application(canvas);
-//     const gui = new GUI();
-//     gui.add(app, 'enableCamera');
-// });
+document.getElementById('playAgainBtn').addEventListener('click', function() {
+    // reset game
+});
