@@ -1,4 +1,4 @@
-import { vec3 } from "../../lib/gl-matrix-module.js";
+import {quat, vec3} from "../../lib/gl-matrix-module.js";
 import { AABB } from "../AABB.js";
 import { AssetManager } from "../AssetManager.js";
 import { Model } from "../Model.js";
@@ -9,13 +9,14 @@ export class EnemyEntity extends PhysicsEntity {
         super(['Enemy'], null, new AABB([0, 1, 0], [2, 2, 2]));
 
         this.position = position;
-        //this.scale = vec3.fromValues(0.025, 0.025, 0.025);
+        this.scale = vec3.fromValues(0.2, 0.2, 0.2);
+        this.rotation = quat.fromValues(-0.7, 0, 0, 0.75);
 
         this.life = 100;
     }
 
     async init(scene) {
-        this.model = await Model.load(scene.game.gl, scene.game.programs.phong, '../res/models/figurehead/scene.gltf');
+        this.model = await Model.load(scene.game.gl, scene.game.programs.phong, '../res/models/enemy/creep/creep2.gltf', 0);
 
         this.deadSound = await AssetManager.getAudio("../res/sound/Coin_Flip_Free_Sound_Effect.wav");
         this.deadSound.volume = 0.2;
