@@ -66,7 +66,7 @@ export class Scene {
                 x = Math.floor(Math.random() * mazeSize);
                 y = Math.floor(Math.random() * mazeSize);
             }
-            enemyEntity = new EnemyEntity(vec3.fromValues(x * 4 - mazeSize * 2, 1.1, y * 4 - mazeSize * 2));
+            enemyEntity = new EnemyEntity(x * 4 - mazeSize * 2, y * 4 - mazeSize * 2);
             this.addEntity(enemyEntity);
 
             const lightEntity = new LightEntity();

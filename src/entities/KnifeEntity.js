@@ -20,7 +20,7 @@ export class KnifeEntity extends PhysicsEntity {
     }
 
     async init(scene) {
-        this.model = await Model.load(scene.game.gl, scene.game.programs.simple, '../res/models/knife/machete+kuk-ri.gltf', 0);
+        this.model = await Model.load(scene.game.gl, scene.game.programs.phong, '../res/models/knife/machete+kuk-ri.gltf', 0);
 
         this.throwSound = await AssetManager.getAudio("../res/sound/knife_throw2.wav");
         this.hitSound = await AssetManager.getAudio("../res/sound/knife_hit.wav");
