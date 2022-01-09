@@ -16,15 +16,11 @@ export class PlayerEntity extends PhysicsEntity {
 
         this.mouseSensitivity = 0.002;
 
-        // this.mousemoveHandler = this.mousemoveHandler.bind(this);
-        // this.mouseclickHandler = this.mouseclickHandler.bind(this);
-        // this.keydownHandler = this.keydownHandler.bind(this);
-        // this.keyupHandler = this.keyupHandler.bind(this);
-        // this.keys = {};
-        // this.mouseClicked = [false, false, false, false, false];
-
         this.walkSpeed = 2.0;
         this.runSpeed = 5.0;
+
+        this.cooldown = 0.5;
+        this.activeCooldown = 0.5;
     }
 
     async init(scene) {
@@ -77,9 +73,11 @@ export class PlayerEntity extends PhysicsEntity {
         vec3.add(this.camera.position, this.camera.position, vec3.fromValues(0, 1.8, 0));
 
         //Shoot
-        if(this.scene.game.mouseClicked[0]) {
-            const knife = new KnifeEntity(vec3.add(vec3.create(), this.camera.position, this.camera.forward), this.camera.forward);
+        this.activeCooldown -= delta;
+        if(this.scene.game.mouseClicked[0] && this.activeCooldown <= 0.0) {
+            const knife = new KnifeEntity(vec3.add(vec3.create(), this.camera.position, this.camera.forward), this.camera.forward, this.rotation);
             this.scene.addEntity(knife);
+            this.activeCooldown = this.cooldown;
         }
     }
 

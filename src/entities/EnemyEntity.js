@@ -12,6 +12,8 @@ export class EnemyEntity extends PhysicsEntity {
         this.scale = vec3.fromValues(0.1, 0.1, 0.1);
         //this.rotation = quat.fromValues(-0.7, 0, 0, 0.75);
 
+        this.movable = false;
+
         this.life = 100;
     }
 

@@ -32,7 +32,7 @@ class Application {
         this.running = true;
 
         this.score = 0;
-        this.gameTime = 2 * 2;
+        this.gameTime = 2 * 60;
         this.gridSize = 11;
 
         this.init().then(() => {
