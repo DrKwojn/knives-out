@@ -21,8 +21,6 @@ export class KnifeEntity extends PhysicsEntity {
         this.rotation = quat.clone(rotation);
 
         this.active = true;
-
-        console.log(this.rotation);
     }
 
     async init(scene) {

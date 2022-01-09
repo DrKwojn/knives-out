@@ -33,10 +33,7 @@ export class PlayerEntity extends PhysicsEntity {
         const right = vec3.transformQuat(vec3.create(), vec3.fromValues(1, 0, 0), this.rotation);
 
         const keys = this.scene.game.keys;
-        if(keys.length > 0) {
-            console.log(keys);
-        }
-
+        
         if(keys['ShiftLeft']) {
             vec3.scale(forward, forward, this.runSpeed);
             vec3.scale(right, right, this.runSpeed);

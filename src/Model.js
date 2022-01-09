@@ -48,51 +48,6 @@ export class Model {
         return model;
     }
 
-    static heightmap(gl, program, width, height) {
-        const w = width;
-        const h = height
-
-        const x = Math.floor(w / 2);
-        const y = Math.floor(h / 2);
-        const vertices = new Float32Array((h + 1) * (w + 1) * 3);
-        for(let vy = 0; vy <= h; vy++) {
-            for(let vx = 0; vx <= w; vx++) {
-                const index = (vy * (w + 1) + vx) * 3;
-                vertices[index + 0] = vx - x;
-                vertices[index + 1] = 0;
-                vertices[index + 2] = vy - y;
-            }
-        }
-
-        const indices = new Uint32Array(w * h * 6);
-        for(let iy = 0; iy < h; iy++) {
-            for(let ix = 0; ix < w; ix++) {
-                const index = (iy * w + ix) * 6;
-                const vIndex0 = (iy + 0) * (w + 1) + (ix + 0);
-                const vIndex1 = (iy + 0) * (w + 1) + (ix + 1);
-                const vIndex2 = (iy + 1) * (w + 1) + (ix + 1);
-                const vIndex3 = (iy + 1) * (w + 1) + (ix + 0);
-                indices[index + 0] = vIndex0;
-                indices[index + 1] = vIndex2;
-                indices[index + 2] = vIndex1;
-                indices[index + 3] = vIndex0;
-                indices[index + 4] = vIndex3;
-                indices[index + 5] = vIndex2;
-            }
-        }
-
-        const matrix = mat4.create();
-        const material = new Material(this.gl);
-        const indexBuffer = new MeshBuffer(indices.buffer, 0, indices.length * indices.BYTES_PER_ELEMENT, indices.BYTES_PER_ELEMENT, gl.ELEMENT_ARRAY_BUFFER);
-        const modelIndices = new MeshIndices(indices.length, gl.UNSIGNED_INT, 0, indexBuffer);
-        const attributes = [];
-        const vertexBuffer = new MeshBuffer(vertices.buffer, 0, vertices.length * vertices.BYTES_PER_ELEMENT, vertices.BYTES_PER_ELEMENT * 3, gl.ARRAY_BUFFER);
-        attributes[0] = new MeshAttribute('POSITION', vertices.length / 3, gl.FLOAT, 3, false, 0, vertexBuffer);
-        const mesh = new ModelMesh(gl, matrix, material, program, gl.TRIANGLES, modelIndices, attributes);
-        const model = new Model(gl, [mesh]);
-        return model;
-    }
-
     static async map(gl, program, grid, gridSize, cellSize, cellHeight) {
         const floorCount = grid.reduce((total, value) => total + (value == 0 ? 1 : 0), 0);
         const wallCount = grid.reduce((total, value, index) => {
@@ -377,30 +332,4 @@ export class Model {
 
         return neighbors;
     }
-
-    //NOTE: Not needed for now
-    // getNeighbors(grid, size, index) {
-    //     const neighbors = [
-    //         -1, -1, -1, 
-    //         -1, -1, -1, 
-    //         -1, -1, -1
-    //     ];
-    //     const x = index % size;
-    //     const y = Math.floor(index / size);
-
-    //     for(let xx = Math.max(0, x - 1); xx <= Math.min(x + 1, size - 1); xx++) {
-    //         for(let yy = Math.max(0, y - 1); yy <= Math.min(y + 1, size - 1); yy++) {
-    //             if(xx == x && yy == y) {
-    //                 continue;
-    //             }
-
-    //             const gridIndex = yy * size + xx;
-    //             const neighborIndex = ((yy - y + 1) * 3 + xx - x + 1);
-    //             console.log(neighborIndex);
-    //             neighbors[neighborIndex] = grid[gridIndex];
-    //         }
-    //     }
-
-    //     return neighbors;
-    // }
 }
