@@ -12,9 +12,11 @@ export class Renderer {
         this.defaultSampler = new TextureSampler(gl);
 
         this.camera = null;
+
+        this.lights = [];
     }
 
-    render(light) {
+    render() {
         const gl = this.gl;
 
         gl.enable(gl.DEPTH_TEST);
@@ -23,30 +25,12 @@ export class Renderer {
         gl.clearColor(0.2, 0.1, 0.3, 1.0);
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        const program = this.programs.phong;
-        gl.useProgram(program.program);
-
-        gl.uniformMatrix4fv(program.uniforms.uProjection, false, this.camera.projection);
-
-        let color = vec3.clone(light.ambientColor);
-        vec3.scale(color, color, 1.0 / 255.0);
-        gl.uniform3fv(program.uniforms.uAmbientColor, color);
-        color = vec3.clone(light.diffuseColor);
-        vec3.scale(color, color, 1.0 / 255.0);
-        gl.uniform3fv(program.uniforms.uDiffuseColor, color);
-        color = vec3.clone(light.specularColor);
-        vec3.scale(color, color, 1.0 / 255.0);
-        gl.uniform3fv(program.uniforms.uSpecularColor, color);
-        gl.uniform1f(program.uniforms.uShininess, light.shininess);
-        gl.uniform3fv(program.uniforms.uLightPosition, light.position);
-        gl.uniform3fv(program.uniforms.uLightAttenuation, light.attenuatuion);
     }
 
     renderModel(matrix, model) {
         const gl = this.gl;
 
-        const vp = this.camera.getMatrix();
+        const vp = this.camera.getView();
         const mvp = mat4.multiply(mat4.create(), vp, matrix);
         model.meshes.forEach(mesh => {
             const material = mesh.material;
@@ -55,8 +39,30 @@ export class Renderer {
 
             gl.useProgram(mesh.program.program);
 
+            //NOTE: Make sure we alyways have 4 lights
+            //console.log(this.lights);
+            for(let index = 0; index < this.lights.length; index++) {
+                const light = this.lights[index];
+
+                let color = vec3.clone(light.ambientColor);
+                vec3.scale(color, color, 1.0 / 255.0);
+                gl.uniform3fv(mesh.program.uniforms['uAmbientColor[' + index + ']'], color);
+                color = vec3.clone(light.diffuseColor);
+                vec3.scale(color, color, 1.0 / 255.0);
+                gl.uniform3fv(mesh.program.uniforms['uDiffuseColor[' + index + ']'], color);
+                color = vec3.clone(light.specularColor);
+                vec3.scale(color, color, 1.0 / 255.0);
+                gl.uniform3fv(mesh.program.uniforms['uSpecularColor[' + index + ']'], color);
+                
+                gl.uniform1f(mesh.program.uniforms['uShininess[' + index + ']'], light.shininess);
+                gl.uniform3fv(mesh.program.uniforms['uLightPosition[' + index + ']'], light.position);
+                gl.uniform3fv(mesh.program.uniforms['uLightAttenuation[' + index + ']'], light.attenuatuion);
+            }
+
             const matrix = mat4.multiply(mat4.create(), mvp, mesh.matrix);
-            gl.uniformMatrix4fv(mesh.program.uniforms.uMvpMatrix, false, matrix);
+            gl.uniformMatrix4fv(mesh.program.uniforms.uViewModel, false, matrix);
+
+            gl.uniformMatrix4fv(mesh.program.uniforms.uProjection, false, this.camera.projection);
 
             gl.uniform1i(mesh.program.uniforms.uTexture, 0);
 

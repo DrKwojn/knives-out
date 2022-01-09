@@ -15,8 +15,7 @@ export class EnemyEntity extends PhysicsEntity {
     }
 
     async init(scene) {
-        this.model = await Model.load(scene.game.gl, scene.game.programs.simple, '../res/models/figurehead/scene.gltf');
-        console.log(this.model);
+        this.model = await Model.load(scene.game.gl, scene.game.programs.phong, '../res/models/figurehead/scene.gltf');
 
         this.deadSound = await AssetManager.getAudio("../res/sound/Coin_Flip_Free_Sound_Effect.wav");
         this.deadSound.volume = 0.2;

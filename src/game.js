@@ -39,6 +39,7 @@ class Application {
         const gl = this.gl;
 
         this.programs = WebGL.buildPrograms(gl, shaders);
+        console.log(this.programs);
 
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);

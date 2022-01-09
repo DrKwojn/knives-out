@@ -33,6 +33,6 @@ export class MapEntity extends Entity {
         ceilEntity.position = vec3.fromValues(- this.cellSize / 2, this.cellHeight, - this.cellSize / 2);
         scene.addEntity(ceilEntity);
 
-        this.model = await Model.map(scene.game.gl, scene.game.programs.simple, this.grid, this.gridSize, this.cellSize, this.cellHeight);
+        this.model = await Model.map(scene.game.gl, scene.game.programs.phong, this.grid, this.gridSize, this.cellSize, this.cellHeight);
     }
 }

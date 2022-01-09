@@ -35,13 +35,13 @@ export class MazeBuilder {
             if(r == 0) {
                 // place exit in top row
                 let doorPos = this.posToSpace(this.rand(1, this.width));
-                this.maze[r][doorPos] = 0;
+                this.maze[r][doorPos] = 1;
             }
 
             if(r == this.rows - 1) {
                 // place entrance in bottom row
                 let doorPos = this.posToSpace(this.rand(1, this.width));
-                this.maze[r][doorPos] = 0;
+                this.maze[r][doorPos] = 1;
             }
 
         });
