@@ -129,6 +129,12 @@ class Application {
 
         await this.scene.update(dt);
 
+        if(this.gameTime < 0) {
+            this.running = false;
+            this.scene.playerCameraEntity.audio.pause();
+            this.displayGameOver();
+        }
+
         if(this.scene.enemyCount <= 0) {
             this.gridSize += 2;
             await this.scene.init(this.gridSize);
@@ -137,11 +143,6 @@ class Application {
         scoreboard[2].innerHTML = this.score;
         this.gameTime -= dt;
         this.displayTimeLeft(this.gameTime * 1000);
-
-        if(this.gameTime < 0) {
-            this.running = false;
-            this.displayGameOver();
-        }
         
         for (let key in this.keys) {
             this.keysPressed[key] = false;
