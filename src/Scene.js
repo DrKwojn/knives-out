@@ -30,7 +30,6 @@ export class Scene {
 
         this.physics = new Physics(this);
 
-        console.log(this.game.programs);
         this.renderer = new Renderer(this.game.gl, this.game.programs);
 
         this.lightEntity = new LightEntity();
