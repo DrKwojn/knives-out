@@ -25,6 +25,9 @@ export class EnemyEntity extends PhysicsEntity {
     update(delta) {
         if(this.life <= 0) {
             this.alive = false;
+            this.scene.enemyCount--;
+            console.log(this.scene.enemyCount);
+            this.scene.game.score++;
             this.deadSound.play();
         }
 
