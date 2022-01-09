@@ -27,10 +27,20 @@ export class Renderer {
         const program = this.programs.phong;
         gl.useProgram(program.program);
 
-        gl.uniform3fv(program.uniforms.uLightPosition, light.position);
-        let color = vec3.clone(light.color);
+        gl.uniformMatrix4fv(program.uniforms.uProjection, false, this.camera.projection);
+
+        let color = vec3.clone(light.ambientColor);
         vec3.scale(color, color, 1.0 / 255.0);
-        gl.uniform3fv(program.uniforms.uLightColor,  color);
+        gl.uniform3fv(program.uniforms.uAmbientColor, color);
+        color = vec3.clone(light.diffuseColor);
+        vec3.scale(color, color, 1.0 / 255.0);
+        gl.uniform3fv(program.uniforms.uDiffuseColor, color);
+        color = vec3.clone(light.specularColor);
+        vec3.scale(color, color, 1.0 / 255.0);
+        gl.uniform3fv(program.uniforms.uSpecularColor, color);
+        gl.uniform1f(program.uniforms.uShininess, light.shininess);
+        gl.uniform3fv(program.uniforms.uLightPosition, light.position);
+        gl.uniform3fv(program.uniforms.uLightAttenuation, light.attenuatuion);
     }
 
     renderModel(matrix, model) {

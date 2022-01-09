@@ -3,7 +3,7 @@ import { AABB } from "../AABB.js";
 import { Model } from "../Model.js";
 import { Entity } from "./Entity.js";
 
-export class MapEntity extends Entity{
+export class MapEntity extends Entity {
     constructor(grid, size) {
         super(null, null);
         this.grid = grid;

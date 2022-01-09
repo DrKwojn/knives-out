@@ -7,6 +7,7 @@ import { PlayerEntity } from "./entities/PlayerEntity.js";
 import { Model } from "./Model.js";
 import { Physics } from "./Physics.js";
 import { Renderer } from "./Renderer.js";
+import { LightEntity } from "./entities/LightEntity.js";
 import { EnemyEntity } from "./entities/EnemyEntity.js";
 import { MapEntity } from "./entities/MapEntity.js";
 import { MazeBuilder } from "./MazeBuilder.js";
