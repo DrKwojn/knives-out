@@ -88,13 +88,13 @@
             "bufferView" : 4,
             "mimeType" : "image/png",
             "name" : "CreepBody.png",
-            "uri" : "../../tmp_files/Creep/CreepBody.png"
+            "uri" : "./CreepBody.png"
         },
         {
             "bufferView" : 9,
             "mimeType" : "image/png",
             "name" : "Creep_Face.png",
-            "uri" : "../../tmp_files/Creep/Creep_Face.png"
+            "uri" : "./Creep_Face.png"
         }
     ],
     "accessors" : [
