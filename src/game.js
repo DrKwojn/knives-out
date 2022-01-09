@@ -32,7 +32,7 @@ class Application {
         this.running = true;
 
         this.score = 0;
-        this.gameTime = 2 * 20;
+        this.gameTime = 2 * 2;
         this.gridSize = 11;
 
         this.init().then(() => {
@@ -44,7 +44,6 @@ class Application {
         const gl = this.gl;
 
         this.programs = WebGL.buildPrograms(gl, shaders);
-        console.log(this.programs);
 
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);

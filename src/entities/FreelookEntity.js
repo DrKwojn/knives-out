@@ -14,11 +14,6 @@ export class FreelookEntity extends PhysicsEntity {
         this.speed = 10.0;
 
         this.mouseSensitivity = 0.002;
-
-        // this.mousemoveHandler = this.mousemoveHandler.bind(this);
-        // this.keydownHandler = this.keydownHandler.bind(this);
-        // this.keyupHandler = this.keyupHandler.bind(this);
-        // this.keys = {};
     }
 
     async init(scene) {

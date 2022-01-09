@@ -30,7 +30,6 @@ export class Scene {
 
         this.physics = new Physics(this);
 
-        console.log(this.game.programs);
         this.renderer = new Renderer(this.game.gl, this.game.programs);
 
         this.lightEntity = new LightEntity();
@@ -39,15 +38,6 @@ export class Scene {
         this.freelookCameraEntity = new FreelookEntity();
         this.freelookCameraEntity.enabled = false;
         this.addEntity(this.freelookCameraEntity);
-
-        this.playerCameraEntity = new PlayerEntity();
-        this.addEntity(this.playerCameraEntity);
-
-        this.cameraEntity = this.playerCameraEntity
-        this.renderer.camera = this.cameraEntity.camera;
-
-        this.physicsRenderer = new PhysicsDebugRenderer(this.game.gl, this.game.programs);
-        this.physicsRenderer.camera = this.cameraEntity.camera;
 
         const mazeSize = gridSize;
         const maze = new MazeBuilder(Math.floor(mazeSize/2), Math.floor(mazeSize/2));
@@ -58,12 +48,14 @@ export class Scene {
         let enemyEntity;
         let x, y;
         this.enemyCount = 4;
+        let enemyPos = [];
         for (let i = 0; i < this.enemyCount; i++) {
             [x, y] = [0, 0];
             while (mapGrid[y * mazeSize + x] === 1) {
                 x = Math.floor(Math.random() * mazeSize);
                 y = Math.floor(Math.random() * mazeSize);
             }
+            enemyPos.push(y * mazeSize + x);
             enemyEntity = new EnemyEntity(x * 4 - mazeSize * 2, y * 4 - mazeSize * 2);
             this.addEntity(enemyEntity);
 
@@ -72,6 +64,21 @@ export class Scene {
             this.addEntity(lightEntity);
             this.renderer.lights.push(lightEntity);
         }
+
+        this.playerCameraEntity = new PlayerEntity();
+        [x, y] = [0, 0];
+        while (mapGrid[y * mazeSize + x] === 1 || enemyPos.includes(y * mazeSize + x)) {
+            x = Math.floor(Math.random() * mazeSize);
+            y = Math.floor(Math.random() * mazeSize);
+        }
+        this.playerCameraEntity.position = vec3.fromValues(x * 4 - mazeSize * 2, 1, y * 4 - mazeSize * 2)
+        this.addEntity(this.playerCameraEntity);
+
+        this.cameraEntity = this.playerCameraEntity
+        this.renderer.camera = this.cameraEntity.camera;
+
+        this.physicsRenderer = new PhysicsDebugRenderer(this.game.gl, this.game.programs);
+        this.physicsRenderer.camera = this.cameraEntity.camera;
 
         this.game.forceResize();
     }
