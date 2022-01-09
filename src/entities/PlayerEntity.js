@@ -28,7 +28,7 @@ export class PlayerEntity extends PhysicsEntity {
     }
 
     async init(scene) {
-        this.audio = await AssetManager.getAudio("../res/sound/Footsteps_Sound_Effect.wav");
+        this.audio = await AssetManager.getAudio("../res/sound/MINECRAFT Walking On Stone Sound Effect.wav");
         this.audio.volume = 0.2;
     }
 
