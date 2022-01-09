@@ -45,7 +45,7 @@ export class KnifeEntity extends PhysicsEntity {
     collided(entity) {
         this.hitSound.play();
         if(entity instanceof EnemyEntity) {
-            entity.life -= 20;
+            entity.life -= 40;
             this.alive = false;
         }
 
