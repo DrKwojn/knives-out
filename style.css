@@ -28,14 +28,14 @@ body, html {
     visibility: hidden;
 }
 
-.mainmenu {
+.mainmenu, .gameover {
     position: fixed;
     top: 50%;
     left: 50%;
     margin-top: -250px;
 }
 
-#startBtn {
+#startBtn, #playAgainBtn{
     background-color: #333333; 
     color: #FFFFFF;
     width: 200px;
@@ -49,13 +49,13 @@ body, html {
     padding: 10px;
 }
 
-#startBtn:hover {
+#startBtn:hover, #playAgainBtn:hover {
     background-color: #FFFFFF; 
     color: #333333;
     cursor: pointer; 
 }
 
-#txtName {
+#txtName, #gameOverTxt {
     display: inline-block;
     font-family: Arial Black, Helvetica, sans-serif;
     color: #FFFFFF;
@@ -75,4 +75,18 @@ label {
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     font-size: 24px;
+}
+
+.gameover {
+    display: none;
+    z-index: 5;
+}
+
+#playAgainBtn {
+    width: 350px;
+    margin-left: -190px;
+}
+
+#gameOverTxt {
+    margin-left: -300px;
 }
