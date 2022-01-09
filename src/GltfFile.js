@@ -38,8 +38,6 @@ export class GltfFile {
             return null;
         }
 
-        console.log(this.file);
-
         const root = this.file.nodes[index];
 
         const meshes = [];
@@ -49,7 +47,6 @@ export class GltfFile {
     }
 
     async parseNodeTree(meshes, parentMatrix, node) {
-        console.log(node);
         let matrix = node.matrix !== undefined ? mat4.fromValues(...node.matrix) : mat4.create();
 
         const translation = node.translation !== undefined ? vec3.clone(node.translation) : vec3.fromValues(0, 0, 0);
@@ -133,7 +130,6 @@ export class GltfFile {
         const modelMaterial = new Material(this.gl);
 
         if (material.pbrMetallicRoughness !== undefined) {
-            //console.log('YES?')
             if (material.pbrMetallicRoughness.baseColorTexture !== undefined) {
                 modelMaterial.colorTexture = await this.parseTexture(this.file.textures[material.pbrMetallicRoughness.baseColorTexture.index])
             }
@@ -144,7 +140,6 @@ export class GltfFile {
 
     async parseTexture(texture) {
         const image = this.file.images[texture.source];
-        console.log(image);
 
         if(image.uri === undefined) {
             console.log('Image has no uri');

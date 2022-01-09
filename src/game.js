@@ -38,6 +38,7 @@ class Application {
         const gl = this.gl;
 
         this.programs = WebGL.buildPrograms(gl, shaders);
+        console.log(this.programs);
 
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);
@@ -168,11 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const gui = new GUI();
     gui.add(app, 'enableCamera');
 
-    gui.addColor(app.scene.lightEntity, 'ambientColor');
-    gui.addColor(app.scene.lightEntity, 'diffuseColor');
-    gui.addColor(app.scene.lightEntity, 'specularColor');
-    gui.add(app.scene.lightEntity, 'shininess', 0.0, 1000.0);
-    for (let i = 0; i < 3; i++) {
-        gui.add(app.scene.lightEntity.position, i, -10.0, 10.0).name('position.' + String.fromCharCode('x'.charCodeAt(0) + i));
-    }
+    // gui.addColor(app.scene.lightEntity, 'ambientColor');
+    // gui.addColor(app.scene.lightEntity, 'diffuseColor');
+    // gui.addColor(app.scene.lightEntity, 'specularColor');
+    // gui.add(app.scene.lightEntity, 'shininess', 0.0, 1000.0);
+    // for (let i = 0; i < 3; i++) {
+    //     gui.add(app.scene.lightEntity.position, i, -10.0, 10.0).name('position.' + String.fromCharCode('x'.charCodeAt(0) + i));
+    // }
 });

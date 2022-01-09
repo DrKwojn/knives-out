@@ -13,7 +13,7 @@ export class Renderer {
 
         this.camera = null;
 
-        this.light = null;
+        this.lights = [];
     }
 
     render() {
@@ -39,23 +39,30 @@ export class Renderer {
 
             gl.useProgram(mesh.program.program);
 
+            //NOTE: Make sure we alyways have 4 lights
+            //console.log(this.lights);
+            for(let index = 0; index < this.lights.length; index++) {
+                const light = this.lights[index];
+
+                let color = vec3.clone(light.ambientColor);
+                vec3.scale(color, color, 1.0 / 255.0);
+                gl.uniform3fv(mesh.program.uniforms['uAmbientColor[' + index + ']'], color);
+                color = vec3.clone(light.diffuseColor);
+                vec3.scale(color, color, 1.0 / 255.0);
+                gl.uniform3fv(mesh.program.uniforms['uDiffuseColor[' + index + ']'], color);
+                color = vec3.clone(light.specularColor);
+                vec3.scale(color, color, 1.0 / 255.0);
+                gl.uniform3fv(mesh.program.uniforms['uSpecularColor[' + index + ']'], color);
+                
+                gl.uniform1f(mesh.program.uniforms['uShininess[' + index + ']'], light.shininess);
+                gl.uniform3fv(mesh.program.uniforms['uLightPosition[' + index + ']'], light.position);
+                gl.uniform3fv(mesh.program.uniforms['uLightAttenuation[' + index + ']'], light.attenuatuion);
+            }
+
             const matrix = mat4.multiply(mat4.create(), mvp, mesh.matrix);
-            gl.uniformMatrix4fv(mesh.program.uniforms.uMvpMatrix, false, matrix);
+            gl.uniformMatrix4fv(mesh.program.uniforms.uViewModel, false, matrix);
 
             gl.uniformMatrix4fv(mesh.program.uniforms.uProjection, false, this.camera.projection);
-
-            let color = vec3.clone(this.light.ambientColor);
-            vec3.scale(color, color, 1.0 / 255.0);
-            gl.uniform3fv(mesh.program.uniforms.uAmbientColor, color);
-            color = vec3.clone(this.light.diffuseColor);
-            vec3.scale(color, color, 1.0 / 255.0);
-            gl.uniform3fv(mesh.program.uniforms.uDiffuseColor, color);
-            color = vec3.clone(this.light.specularColor);
-            vec3.scale(color, color, 1.0 / 255.0);
-            gl.uniform3fv(mesh.program.uniforms.uSpecularColor, color);
-            gl.uniform1f(mesh.program.uniforms.uShininess, this.light.shininess);
-            gl.uniform3fv(mesh.program.uniforms.uLightPosition, this.light.position);
-            gl.uniform3fv(mesh.program.uniforms.uLightAttenuation, this.light.attenuatuion);
 
             gl.uniform1i(mesh.program.uniforms.uTexture, 0);
 

@@ -354,13 +354,6 @@ export class Model {
         const attributes = [];
         const vertexBuffer = new MeshBuffer(vertices.buffer, 0, vertices.length * vertices.BYTES_PER_ELEMENT, 
             vertices.BYTES_PER_ELEMENT * vertComponenets, gl.ARRAY_BUFFER);
-
-
-        console.log(vertices);
-        console.log(vertices.length);
-        console.log(vertComponenets);
-        console.log(vertices.length / vertComponenets);
-        
         attributes[0] = new MeshAttribute(  'POSITION', vertices.length / vertComponenets, gl.FLOAT, 3, false,           0, vertexBuffer);
         attributes[1] = new MeshAttribute('TEXCOORD_0', vertices.length / vertComponenets, gl.FLOAT, 2, false,       3 * 4, vertexBuffer);
         attributes[2] = new MeshAttribute(    'NORMAL', vertices.length / vertComponenets, gl.FLOAT, 3, false, (3 + 2) * 4, vertexBuffer);

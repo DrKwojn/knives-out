@@ -24,11 +24,11 @@ export class Scene {
     async init() {
         this.physics = new Physics(this);
 
+        console.log(this.game.programs);
         this.renderer = new Renderer(this.game.gl, this.game.programs);
 
         this.lightEntity = new LightEntity();
         this.addEntity(this.lightEntity);
-        this.renderer.light = this.lightEntity;
         
         this.freelookCameraEntity = new FreelookEntity();
         this.freelookCameraEntity.enabled = false;
@@ -59,7 +59,7 @@ export class Scene {
         
         let enemyEntity;
         let x, y;
-        const enemyCount = 20
+        const enemyCount = 4;
         for (let i = 0; i < enemyCount; i++) {
             [x, y] = [0, 0];
             while (mapGrid[y * mazeSize + x] === 1) {
@@ -68,6 +68,11 @@ export class Scene {
             }
             enemyEntity = new EnemyEntity(vec3.fromValues(x * 4 - mazeSize * 2, 0, y * 4 - mazeSize * 2));
             this.addEntity(enemyEntity);
+
+            const lightEntity = new LightEntity();
+            lightEntity.position = vec3.fromValues(x * 4 - mazeSize * 2, 6, y * 4 - mazeSize * 2);
+            this.addEntity(lightEntity);
+            this.renderer.lights.push(lightEntity);
         }
     }
 
