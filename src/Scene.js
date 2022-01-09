@@ -57,8 +57,18 @@ export class Scene {
 
         this.addEntity(new MapEntity(mapGrid, mazeSize));
         
-        const enemyEntity = new EnemyEntity(vec3.fromValues(5, 0, -5));
-        this.addEntity(enemyEntity);
+        let enemyEntity;
+        let x, y;
+        const enemyCount = 20
+        for (let i = 0; i < enemyCount; i++) {
+            [x, y] = [0, 0];
+            while (mapGrid[y * mazeSize + x] === 1) {
+                x = Math.floor(Math.random() * mazeSize);
+                y = Math.floor(Math.random() * mazeSize);
+            }
+            enemyEntity = new EnemyEntity(vec3.fromValues(x * 4 - mazeSize * 2, 0, y * 4 - mazeSize * 2));
+            this.addEntity(enemyEntity);
+        }
     }
 
     async update(delta) {
