@@ -32,7 +32,7 @@ class Application {
         this.running = true;
 
         this.score = 0;
-        this.gameTime = 2 * 2;
+        this.gameTime = 2 * 60;
         this.gridSize = 11;
 
         this.init().then(() => {
@@ -128,6 +128,10 @@ class Application {
 
         await this.scene.update(dt);
 
+        scoreboard[2].innerHTML = this.score;
+        this.gameTime -= dt;
+        this.displayTimeLeft(this.gameTime * 1000);
+
         if(this.gameTime < 0) {
             this.running = false;
             this.scene.playerCameraEntity.audio.pause();
@@ -138,10 +142,6 @@ class Application {
             this.gridSize += 2;
             await this.scene.init(this.gridSize);
         }
-
-        scoreboard[2].innerHTML = this.score;
-        this.gameTime -= dt;
-        this.displayTimeLeft(this.gameTime * 1000);
         
         for (let key in this.keys) {
             this.keysPressed[key] = false;
@@ -196,6 +196,7 @@ class Application {
 
     displayGameOver() {
         document.getElementsByClassName('gameover')[0].style.display = "block";
+        this.displayTimeLeft(0);
         document.exitPointerLock();
     }
 }
