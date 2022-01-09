@@ -220,14 +220,14 @@ export class Model {
                         vertices[(vertexOffset + 2) * vertComponenets + 2] = y1;
 
                         vertices[(vertexOffset + 2) * vertComponenets + 3] = 1;
-                        vertices[(vertexOffset + 2) * vertComponenets + 4] = 0.5;
+                        vertices[(vertexOffset + 2) * vertComponenets + 4] = 1;
 
                         vertices[(vertexOffset + 3) * vertComponenets + 0] = x0;
                         vertices[(vertexOffset + 3) * vertComponenets + 1] = 0;
                         vertices[(vertexOffset + 3) * vertComponenets + 2] = y0;
 
                         vertices[(vertexOffset + 3) * vertComponenets + 3] = 0.5;
-                        vertices[(vertexOffset + 3) * vertComponenets + 4] = 0.5;
+                        vertices[(vertexOffset + 3) * vertComponenets + 4] = 1;
 
                         indices[indexOffset * 6 + 0] = vertexOffset + 0;
                         indices[indexOffset * 6 + 1] = vertexOffset + 2;
