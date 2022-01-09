@@ -1,7 +1,7 @@
 import { quat, vec3 } from "../../lib/gl-matrix-module.js";
 import { AABB } from "../AABB.js";
 import { AssetManager } from "../AssetManager.js";
-import { ModelCamera } from "../ModelCamera.js";
+import { Camera } from "../Camera.js";
 import { KnifeEntity } from "./KnifeEntity.js";
 import { PhysicsEntity } from "./PhysicsEntity.js";
 
@@ -9,7 +9,7 @@ export class PlayerEntity extends PhysicsEntity {
     constructor() {
         super(['Camera', 'Player'], null, new AABB([0,1,0], [0.5, 2, 0.5]));
 
-        this.camera = new ModelCamera(vec3.fromValues(0, 1.8, 0));
+        this.camera = new Camera(vec3.fromValues(0, 1.8, 0));
 
         this.yaw   = 0.0;
         this.pitch = 0.0;
@@ -93,12 +93,13 @@ export class PlayerEntity extends PhysicsEntity {
         const pi = Math.PI;
         const twopi = pi * 2;
         const halfpi = pi / 2;
+        const rad80 = pi / 2.25;
 
-        if (this.pitch > halfpi) {
-            this.pitch = halfpi;
+        if (this.pitch > rad80) {
+            this.pitch = rad80;
         }
-        if (this.pitch < -halfpi) {
-            this.pitch = -halfpi;
+        if (this.pitch < -rad80) {
+            this.pitch = -rad80;
         }
 
         this.yaw = ((this.yaw % twopi) + twopi) % twopi;

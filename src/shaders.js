@@ -34,12 +34,15 @@ layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexCoord;
 
 uniform mat4 uMvpMatrix;
+uniform mat4 uProjection;
 
 out vec2 vTexCoord;
 
 void main() {
     vTexCoord = aTexCoord;
-    gl_Position = uMvpMatrix * vec4(aPosition, 1);
+    //gl_Position = uMvpMatrix * vec4(aPosition, 1);
+    vec3 vertexPosition = (uMvpMatrix * vec4(aPosition, 1)).xyz;
+    gl_Position = uProjection * vec4(vertexPosition, 1);
 }
 `;
 

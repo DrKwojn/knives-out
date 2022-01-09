@@ -28,6 +28,7 @@ export class Scene {
 
         this.lightEntity = new LightEntity();
         this.addEntity(this.lightEntity);
+        this.renderer.light = this.lightEntity;
         
         this.freelookCameraEntity = new FreelookEntity();
         this.freelookCameraEntity.enabled = false;
@@ -89,7 +90,7 @@ export class Scene {
     }
 
     render() {
-        this.renderer.render(this.lightEntity);
+        this.renderer.render();
         for(const entity of this.entities) {
             if(entity.enabled) {
                 entity.render(this.renderer);

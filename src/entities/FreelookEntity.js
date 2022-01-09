@@ -1,12 +1,12 @@
 import { vec3 } from "../../lib/gl-matrix-module.js";
-import { ModelCamera } from "../ModelCamera.js";
+import { Camera } from "../Camera.js";
 import { PhysicsEntity } from "./PhysicsEntity.js";
 
 export class FreelookEntity extends PhysicsEntity {
     constructor() {
         super(['Camera'], null, null);
 
-        this.camera = new ModelCamera();
+        this.camera = new Camera();
 
         this.yaw   = 0.0;
         this.pitch = 0.0;

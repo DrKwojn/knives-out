@@ -57,12 +57,7 @@ export class GltfFile {
         const scale = node.scale !== undefined ? vec3.clone(node.scale) : vec3.fromValues(1, 1, 1);
         const m = mat4.fromRotationTranslationScale(matrix, rotation, translation, scale);
         mat4.multiply(matrix, matrix, m);
-        console.log('Pre');
-        console.log(matrix);
-
         mat4.multiply(matrix, parentMatrix, matrix);
-        console.log('Post');
-        console.log(matrix);
 
         if(node.mesh !== undefined) {
             const mesh = this.file.meshes[node.mesh];

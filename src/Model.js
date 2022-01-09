@@ -110,7 +110,7 @@ export class Model {
 
         const count = floorCount + wallCount + ceilCount;
 
-        const vertComponenets = 5;
+        const vertComponenets = 3 + 2 + 3;
         const vertCount = count * 4;
         const indexCount = count * 6;
         
@@ -137,12 +137,20 @@ export class Model {
                 vertices[(vertexOffset + 0) * vertComponenets + 3] = 0;
                 vertices[(vertexOffset + 0) * vertComponenets + 4] = 0;
 
+                vertices[(vertexOffset + 0) * vertComponenets + 5] = 0;
+                vertices[(vertexOffset + 0) * vertComponenets + 6] = 1;
+                vertices[(vertexOffset + 0) * vertComponenets + 7] = 0;
+
                 vertices[(vertexOffset + 1) * vertComponenets + 0] = offset + x * cellSize + halfCellSize;
                 vertices[(vertexOffset + 1) * vertComponenets + 1] = 0;
                 vertices[(vertexOffset + 1) * vertComponenets + 2] = offset + y * cellSize - halfCellSize;
 
                 vertices[(vertexOffset + 1) * vertComponenets + 3] = 0.5;
                 vertices[(vertexOffset + 1) * vertComponenets + 4] = 0;
+
+                vertices[(vertexOffset + 1) * vertComponenets + 5] = 0;
+                vertices[(vertexOffset + 1) * vertComponenets + 6] = 1;
+                vertices[(vertexOffset + 1) * vertComponenets + 7] = 0;
 
                 vertices[(vertexOffset + 2) * vertComponenets + 0] = offset + x * cellSize + halfCellSize;
                 vertices[(vertexOffset + 2) * vertComponenets + 1] = 0;
@@ -151,12 +159,20 @@ export class Model {
                 vertices[(vertexOffset + 2) * vertComponenets + 3] = 0.5;
                 vertices[(vertexOffset + 2) * vertComponenets + 4] = 0.5;
 
+                vertices[(vertexOffset + 2) * vertComponenets + 5] = 0;
+                vertices[(vertexOffset + 2) * vertComponenets + 6] = 1;
+                vertices[(vertexOffset + 2) * vertComponenets + 7] = 0;
+
                 vertices[(vertexOffset + 3) * vertComponenets + 0] = offset + x * cellSize - halfCellSize;
                 vertices[(vertexOffset + 3) * vertComponenets + 1] = 0;
                 vertices[(vertexOffset + 3) * vertComponenets + 2] = offset + y * cellSize + halfCellSize;
 
                 vertices[(vertexOffset + 3) * vertComponenets + 3] = 0;
                 vertices[(vertexOffset + 3) * vertComponenets + 4] = 0.5;
+
+                vertices[(vertexOffset + 3) * vertComponenets + 5] = 0;
+                vertices[(vertexOffset + 3) * vertComponenets + 6] = 1;
+                vertices[(vertexOffset + 3) * vertComponenets + 7] = 0;
 
                 indices[indexOffset * 6 + 0] = vertexOffset + 0;
                 indices[indexOffset * 6 + 1] = vertexOffset + 2;
@@ -180,26 +196,31 @@ export class Model {
                 for(const [key, value] of Object.entries(neighbors)) {
                     if(value == 1) {
                         let x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+                        let nx = 0, ny = 0, nz = 0;
                         if(key == 'west') {
                             x0 = offset + x * cellSize - halfCellSize;
                             y0 = offset + y * cellSize + halfCellSize;
                             x1 = offset + x * cellSize - halfCellSize;
                             y1 = offset + y * cellSize - halfCellSize;
+                            nx = 1;
                         } else if(key == 'east') {
                             x0 = offset + x * cellSize + halfCellSize;
                             y0 = offset + y * cellSize - halfCellSize;
                             x1 = offset + x * cellSize + halfCellSize;
                             y1 = offset + y * cellSize + halfCellSize;
+                            nx = -1;
                         } else if(key == 'north') {
                             x0 = offset + x * cellSize - halfCellSize;
                             y0 = offset + y * cellSize - halfCellSize;
                             x1 = offset + x * cellSize + halfCellSize;
                             y1 = offset + y * cellSize - halfCellSize;
+                            nz = 1;
                         } else if(key == 'south') {
                             x0 = offset + x * cellSize + halfCellSize;
                             y0 = offset + y * cellSize + halfCellSize;
                             x1 = offset + x * cellSize - halfCellSize;
                             y1 = offset + y * cellSize + halfCellSize;
+                            nz = -1;
                         }
                         vertices[(vertexOffset + 0) * vertComponenets + 0] = x0;
                         vertices[(vertexOffset + 0) * vertComponenets + 1] = cellHeight;
@@ -208,12 +229,20 @@ export class Model {
                         vertices[(vertexOffset + 0) * vertComponenets + 3] = 0.5;
                         vertices[(vertexOffset + 0) * vertComponenets + 4] = 0;
 
+                        vertices[(vertexOffset + 0) * vertComponenets + 5] = nx;
+                        vertices[(vertexOffset + 0) * vertComponenets + 6] = ny;
+                        vertices[(vertexOffset + 0) * vertComponenets + 7] = nz;
+
                         vertices[(vertexOffset + 1) * vertComponenets + 0] = x1;
                         vertices[(vertexOffset + 1) * vertComponenets + 1] = cellHeight;
                         vertices[(vertexOffset + 1) * vertComponenets + 2] = y1;
 
                         vertices[(vertexOffset + 1) * vertComponenets + 3] = 1;
                         vertices[(vertexOffset + 1) * vertComponenets + 4] = 0;
+
+                        vertices[(vertexOffset + 1) * vertComponenets + 5] = nx;
+                        vertices[(vertexOffset + 1) * vertComponenets + 6] = ny;
+                        vertices[(vertexOffset + 1) * vertComponenets + 7] = nz;
 
                         vertices[(vertexOffset + 2) * vertComponenets + 0] = x1;
                         vertices[(vertexOffset + 2) * vertComponenets + 1] = 0;
@@ -222,12 +251,20 @@ export class Model {
                         vertices[(vertexOffset + 2) * vertComponenets + 3] = 1;
                         vertices[(vertexOffset + 2) * vertComponenets + 4] = 1;
 
+                        vertices[(vertexOffset + 2) * vertComponenets + 5] = nx;
+                        vertices[(vertexOffset + 2) * vertComponenets + 6] = ny;
+                        vertices[(vertexOffset + 2) * vertComponenets + 7] = nz;
+
                         vertices[(vertexOffset + 3) * vertComponenets + 0] = x0;
                         vertices[(vertexOffset + 3) * vertComponenets + 1] = 0;
                         vertices[(vertexOffset + 3) * vertComponenets + 2] = y0;
 
                         vertices[(vertexOffset + 3) * vertComponenets + 3] = 0.5;
                         vertices[(vertexOffset + 3) * vertComponenets + 4] = 1;
+
+                        vertices[(vertexOffset + 3) * vertComponenets + 5] = nx;
+                        vertices[(vertexOffset + 3) * vertComponenets + 6] = ny;
+                        vertices[(vertexOffset + 3) * vertComponenets + 7] = nz;
 
                         indices[indexOffset * 6 + 0] = vertexOffset + 0;
                         indices[indexOffset * 6 + 1] = vertexOffset + 2;
@@ -243,7 +280,7 @@ export class Model {
             }
         }
 
-        //Ceil
+        // //Ceil
         for(let i = 0; i < grid.length; i++) {
             const x = i % gridSize;
             const y = Math.floor(i / gridSize);
@@ -255,6 +292,10 @@ export class Model {
 
                 vertices[(vertexOffset + 0) * vertComponenets + 3] = 0;
                 vertices[(vertexOffset + 0) * vertComponenets + 4] = 0.5;
+                
+                vertices[(vertexOffset + 0) * vertComponenets + 5] = 0;
+                vertices[(vertexOffset + 0) * vertComponenets + 6] = -1;
+                vertices[(vertexOffset + 0) * vertComponenets + 7] = 0;
 
                 vertices[(vertexOffset + 1) * vertComponenets + 0] = offset + x * cellSize + halfCellSize;
                 vertices[(vertexOffset + 1) * vertComponenets + 1] = cellHeight;
@@ -263,6 +304,10 @@ export class Model {
                 vertices[(vertexOffset + 1) * vertComponenets + 3] = 0.5;
                 vertices[(vertexOffset + 1) * vertComponenets + 4] = 0.5;
 
+                vertices[(vertexOffset + 1) * vertComponenets + 5] = 0;
+                vertices[(vertexOffset + 1) * vertComponenets + 6] = -1;
+                vertices[(vertexOffset + 1) * vertComponenets + 7] = 0;
+
                 vertices[(vertexOffset + 2) * vertComponenets + 0] = offset + x * cellSize + halfCellSize;
                 vertices[(vertexOffset + 2) * vertComponenets + 1] = cellHeight;
                 vertices[(vertexOffset + 2) * vertComponenets + 2] = offset + y * cellSize - halfCellSize;
@@ -270,12 +315,20 @@ export class Model {
                 vertices[(vertexOffset + 2) * vertComponenets + 3] = 0.5;
                 vertices[(vertexOffset + 2) * vertComponenets + 4] = 1;
 
+                vertices[(vertexOffset + 2) * vertComponenets + 5] = 0;
+                vertices[(vertexOffset + 2) * vertComponenets + 6] = -1;
+                vertices[(vertexOffset + 2) * vertComponenets + 7] = 0;
+
                 vertices[(vertexOffset + 3) * vertComponenets + 0] = offset + x * cellSize - halfCellSize;
                 vertices[(vertexOffset + 3) * vertComponenets + 1] = cellHeight;
                 vertices[(vertexOffset + 3) * vertComponenets + 2] = offset + y * cellSize - halfCellSize;
 
                 vertices[(vertexOffset + 3) * vertComponenets + 3] = 0;
                 vertices[(vertexOffset + 3) * vertComponenets + 4] = 1;
+
+                vertices[(vertexOffset + 3) * vertComponenets + 5] = 0;
+                vertices[(vertexOffset + 3) * vertComponenets + 6] = -1;
+                vertices[(vertexOffset + 3) * vertComponenets + 7] = 0;
 
                 indices[indexOffset * 6 + 0] = vertexOffset + 0;
                 indices[indexOffset * 6 + 1] = vertexOffset + 2;
@@ -293,15 +346,24 @@ export class Model {
         const material = new Material(gl);
 
         const image = await AssetManager.getImage('../res/textures/map2.png');
-        const sampler = new TextureSampler(gl, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT);
+        const sampler = new TextureSampler(gl, gl.LINEAR_MIPMAP_LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT);
         material.colorTexture = new Texture(gl, image, sampler);
         
         const indexBuffer = new MeshBuffer(indices.buffer, 0, indices.length * indices.BYTES_PER_ELEMENT, indices.BYTES_PER_ELEMENT, gl.ELEMENT_ARRAY_BUFFER);
         const modelIndices = new MeshIndices(indices.length, gl.UNSIGNED_INT, 0, indexBuffer);
         const attributes = [];
-        const vertexBuffer = new MeshBuffer(vertices.buffer, 0, vertices.length * vertices.BYTES_PER_ELEMENT, vertices.BYTES_PER_ELEMENT * 5, gl.ARRAY_BUFFER);
-        attributes[0] = new MeshAttribute('POSITION', vertices.length / 5, gl.FLOAT, 3, false, 0, vertexBuffer);
-        attributes[1] = new MeshAttribute('TEXCOORD_0', vertices.length / 5, gl.FLOAT, 2, false, 3 * 4, vertexBuffer);
+        const vertexBuffer = new MeshBuffer(vertices.buffer, 0, vertices.length * vertices.BYTES_PER_ELEMENT, 
+            vertices.BYTES_PER_ELEMENT * vertComponenets, gl.ARRAY_BUFFER);
+
+
+        console.log(vertices);
+        console.log(vertices.length);
+        console.log(vertComponenets);
+        console.log(vertices.length / vertComponenets);
+        
+        attributes[0] = new MeshAttribute(  'POSITION', vertices.length / vertComponenets, gl.FLOAT, 3, false,           0, vertexBuffer);
+        attributes[1] = new MeshAttribute('TEXCOORD_0', vertices.length / vertComponenets, gl.FLOAT, 2, false,       3 * 4, vertexBuffer);
+        attributes[2] = new MeshAttribute(    'NORMAL', vertices.length / vertComponenets, gl.FLOAT, 3, false, (3 + 2) * 4, vertexBuffer);
         
         const mesh = new ModelMesh(gl, matrix, material, program, gl.TRIANGLES, modelIndices, attributes);
 
