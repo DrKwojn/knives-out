@@ -49,19 +49,28 @@ export class AssetManager {
 
     static async getAudio(path) {
         const url = path instanceof URL ? path : new URL(path, window.location);
-        if (this.audioAssets.has(url.href)) {
-            const newAudio = this.audioAssets.get(url.href).cloneNode(true);
-            await newAudio.load();
-            return newAudio;
-        }
-
         const audio = new Audio(url);
+        return audio;
 
-        this.audioAssets.set(url.href, audio);
+        //TODO: There is a bug with sound
+        // if (this.audioAssets.has(url.href)) {
+        //     console.log('here');
+        //     const newAudio = this.audioAssets.get(url.href).cloneNode(true);
+        //     await newAudio.load();
+        //     return newAudio;
+        // }
+
+        // console.log(url.href);
+
+        // const audio = new Audio(url);
+
+        // this.audioAssets.set(url.href, audio);
         
-        const newAudio = this.audioAssets.get(url.href).cloneNode(true);
-        await newAudio.load();
+        // const clone = this.audioAssets.get(url.href).cloneNode(true);
+        // await clone.load();
 
-        return newAudio;
+        // console.log(clone);
+
+        // return clone;
     }
 }

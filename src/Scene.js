@@ -131,7 +131,6 @@ export class Scene {
                 this.cameraEntity = this.playerCameraEntity;
                 
             }
-            
             this.renderer.camera = this.cameraEntity.camera;
             this.physicsRenderer.camera = this.cameraEntity.camera;
             this.game.forceResize();

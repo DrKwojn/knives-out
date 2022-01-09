@@ -38,23 +38,31 @@ export class GltfFile {
             return null;
         }
 
+        console.log(this.file);
+
         const root = this.file.nodes[index];
 
         const meshes = [];
-        await this.parseNodeTree(meshes, root);
+        await this.parseNodeTree(meshes, mat4.create(), root);
 
         return new Model(this.gl, meshes);
     }
 
-    async parseNodeTree(meshes, node) {
-        let matrix = node.matrix !== undefined ? mat4.clone(node.matrix) : mat4.create();
+    async parseNodeTree(meshes, parentMatrix, node) {
+        console.log(node);
+        let matrix = node.matrix !== undefined ? mat4.fromValues(...node.matrix) : mat4.create();
 
         const translation = node.translation !== undefined ? vec3.clone(node.translation) : vec3.fromValues(0, 0, 0);
         const rotation = node.rotation !== undefined ? quat.clone(node.rotation) : quat.fromValues(0, 0, 0, 1);
         const scale = node.scale !== undefined ? vec3.clone(node.scale) : vec3.fromValues(1, 1, 1);
-        matrix = mat4.fromRotationTranslationScale(matrix, rotation, translation, scale);
+        const m = mat4.fromRotationTranslationScale(matrix, rotation, translation, scale);
+        mat4.multiply(matrix, matrix, m);
+        console.log('Pre');
+        console.log(matrix);
 
-        //TODO: If the matrix is dependent on parent values we need to recurse up to multiply the matrices
+        mat4.multiply(matrix, parentMatrix, matrix);
+        console.log('Post');
+        console.log(matrix);
 
         if(node.mesh !== undefined) {
             const mesh = this.file.meshes[node.mesh];
@@ -64,8 +72,8 @@ export class GltfFile {
         }
 
         if (node.children) {
-            for(childIndex of node.children) {
-                await this.parseNodeTree(meshes, this.file.nodes[childIndex]);
+            for(const childIndex of node.children) {
+                await this.parseNodeTree(meshes, matrix, this.file.nodes[childIndex]);
             }
         }
     }
@@ -79,9 +87,10 @@ export class GltfFile {
 
             const mode = primitive.mode !== undefined ? primitive.mode : this.gl.TRIANGLES;
             const indices = primitive.indices !== undefined ? await this.parseIndices(this.file.accessors[primitive.indices]) : null;
-            const material = await this.parseMaterial(this.file.materials[primitive.material]);
-
-            meshes.push(new ModelMesh(this.gl, matrix, material, this.program, mode, indices, attributes));
+            if(primitive.material !== undefined) {
+                const material = await this.parseMaterial(this.file.materials[primitive.material]);
+                meshes.push(new ModelMesh(this.gl, matrix, material, this.program, mode, indices, attributes));
+            }
         }
     }
 
@@ -129,6 +138,7 @@ export class GltfFile {
         const modelMaterial = new Material(this.gl);
 
         if (material.pbrMetallicRoughness !== undefined) {
+            //console.log('YES?')
             if (material.pbrMetallicRoughness.baseColorTexture !== undefined) {
                 modelMaterial.colorTexture = await this.parseTexture(this.file.textures[material.pbrMetallicRoughness.baseColorTexture.index])
             }
@@ -139,6 +149,7 @@ export class GltfFile {
 
     async parseTexture(texture) {
         const image = this.file.images[texture.source];
+        console.log(image);
 
         if(image.uri === undefined) {
             console.log('Image has no uri');
