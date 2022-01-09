@@ -210,6 +210,9 @@ document.getElementById('startBtn').addEventListener("click", function() {
     const canvas = document.querySelector('canvas');
     const app = new Application(canvas);
     app.enableCamera();
+
+    const gui = new GUI();
+    gui.add(app, 'enableCamera');
 });
 
 document.getElementById('playAgainBtn').addEventListener('click', function() {
@@ -218,7 +221,4 @@ document.getElementById('playAgainBtn').addEventListener('click', function() {
     const canvas = document.querySelector('canvas');
     const app = new Application(canvas);
     app.enableCamera();
-
-    const gui = new GUI();
-    gui.add(app, 'enableCamera');
 });
