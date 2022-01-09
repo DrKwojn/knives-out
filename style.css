@@ -79,7 +79,7 @@ label {
 
 .gameover {
     display: none;
-    z-index: 5;
+    z-index: 100;
 }
 
 #playAgainBtn {
