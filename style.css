@@ -11,6 +11,7 @@ body, html {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    background-color: #333333;
 }
 
 .fullscreen > * {
@@ -18,22 +19,38 @@ body, html {
     height: 100%;
 }
 
-.overlay {
+.mainmenu {
     position: fixed;
-    left: 20px;
-    top: 20px;
+    top: 50%;
+    left: 50%;
+    margin-top: -250px;
 }
 
-a.back {
-    display: block;
-    padding: 5px 10px;
-    background: #fff;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    text-decoration: none;
-    color: #000;
+#startBtn {
+    background-color: #333333; 
+    color: #FFFFFF;
+    width: 200px;
+    height: 70px;
+    margin-left: -100px;
+    font-size: 50px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
+    border: 2px solid #FFFFFF;
+    border-radius: 15px;
+    padding: 10px;
 }
 
-a.back:hover {
-    background: #ddd;
+#startBtn:hover {
+    background-color: #FFFFFF; 
+    color: #333333;
+    cursor: pointer; 
+}
+
+#txtName {
+    display: inline-block;
+    font-family: Arial Black, Helvetica, sans-serif;
+    color: #FFFFFF;
+    font-size: 100px;
+    margin-left: -290px;
+    padding-bottom: 100px;
 }

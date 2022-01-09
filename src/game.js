@@ -4,10 +4,11 @@ import { shaders } from './shaders.js';
 import { WebGL } from './WebGL.js';
 
 class Application {
-    constructor(canvas, glOptions) {
+    constructor(canvas, glOptions, mainmenu) {
         this._update = this._update.bind(this);
 
         this.canvas = canvas;
+        this.mainmenu = mainmenu;
         
         this.gl = null;
         try {
@@ -162,17 +163,18 @@ class Application {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.getElementById('startBtn').addEventListener("click", function() {
     const canvas = document.querySelector('canvas');
     const app = new Application(canvas);
-    const gui = new GUI();
-    gui.add(app, 'enableCamera');
+    app.enableCamera();
 
-    gui.addColor(app.scene.lightEntity, 'ambientColor');
-    gui.addColor(app.scene.lightEntity, 'diffuseColor');
-    gui.addColor(app.scene.lightEntity, 'specularColor');
-    gui.add(app.scene.lightEntity, 'shininess', 0.0, 1000.0);
-    for (let i = 0; i < 3; i++) {
-        gui.add(app.scene.lightEntity.position, i, -10.0, 10.0).name('position.' + String.fromCharCode('x'.charCodeAt(0) + i));
-    }
+    document.getElementById('startBtn').style.display = "none";
+    document.getElementById('txtName').style.display = "none";
 });
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     const canvas = document.querySelector('canvas');
+//     const app = new Application(canvas);
+//     const gui = new GUI();
+//     gui.add(app, 'enableCamera');
+// });
