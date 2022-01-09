@@ -29,9 +29,15 @@ class Application {
         this.keysPressed = {};
         this.mouseClicked = [false, false, false, false, false];
 
+        this.running = true;
+
+        this.score = 0;
+        this.gameTime = 2 * 2;
+        this.gridSize = 11;
+
         this.init().then(() => {
             requestAnimationFrame(this._update);
-        });        
+        });
     }
 
     async init() {
@@ -47,14 +53,11 @@ class Application {
         this.startTime = this.time;
 
         this.scene = new Scene(this);
-        await this.scene.init();
+        await this.scene.init(this.gridSize);
 
         // HUD
-        this.enemiesKilled = 0;
-        scoreboard[2].innerHTML = this.enemiesKilled;
-        this.displayTimeLeft(21400);
-
-        //this.displayGameOver();
+        scoreboard[2].innerHTML = this.score;
+        this.displayTimeLeft(this.gameTime * 1000);
     }
 
     enable() {
@@ -125,6 +128,20 @@ class Application {
         this.startTime = this.time;
 
         await this.scene.update(dt);
+
+        if(this.scene.enemyCount <= 0) {
+            this.gridSize += 2;
+            await this.scene.init(this.gridSize);
+        }
+
+        scoreboard[2].innerHTML = this.score;
+        this.gameTime -= dt;
+        this.displayTimeLeft(this.gameTime * 1000);
+
+        if(this.gameTime < 0) {
+            this.running = false;
+            this.displayGameOver();
+        }
         
         for (let key in this.keys) {
             this.keysPressed[key] = false;
@@ -142,6 +159,10 @@ class Application {
     }
 
     _update() {
+        if(!this.running) {
+            return;
+        }
+
         this._resize();
         this.update().then(() => {
             this.render();
@@ -181,14 +202,20 @@ class Application {
 const scoreboard = document.getElementsByTagName('label');
 
 document.getElementById('startBtn').addEventListener("click", function() {
+    document.getElementsByClassName('mainmenu')[0].style.display = "none";
+    document.getElementsByClassName('scoreboard')[0].style.visibility = "visible";
+
     const canvas = document.querySelector('canvas');
     const app = new Application(canvas);
     app.enableCamera();
-
-    document.getElementsByClassName('mainmenu')[0].style.display = "none";
-    document.getElementsByClassName('scoreboard')[0].style.visibility = "visible";
 });
 
 document.getElementById('playAgainBtn').addEventListener('click', function() {
     // reset game
+    document.getElementsByClassName('mainmenu')[0].style.display = "none";
+    document.getElementsByClassName('scoreboard')[0].style.visibility = "visible";
+
+    const canvas = document.querySelector('canvas');
+    const app = new Application(canvas);
+    app.enableCamera();
 });

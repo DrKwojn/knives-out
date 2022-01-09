@@ -22,26 +22,35 @@ export class GltfFile {
     }
 
     async createModel(nameOrIndex) {
-        let index = -1;
-        if (typeof nameOrIndex === 'number') {
-            if (nameOrIndex >= 0 && nameOrIndex < this.file.nodes.length) {
-                index = nameOrIndex;
-            }
+        let indices = null;
+        if(Array.isArray(nameOrIndex)){
+            indices = nameOrIndex;
         } else {
-            index = this.file.nodes.findIndex(element => {
-                return element.name === nameOrIndex;
-            });
+            indices = [nameOrIndex];
         }
-
-        if(index < 0) {
-            console.log('Node with name or index of ' + nameOrIndex + ' not found');
-            return null;
-        }
-
-        const root = this.file.nodes[index];
 
         const meshes = [];
-        await this.parseNodeTree(meshes, mat4.create(), root);
+        for(let i = 0; i < indices.length; i++) {
+            const nameOrIndex = indices[i];
+            let index = -1;
+            if (typeof nameOrIndex === 'number') {
+                if (nameOrIndex >= 0 && nameOrIndex < this.file.nodes.length) {
+                    index = nameOrIndex;
+                }
+            } else {
+                index = this.file.nodes.findIndex(element => {
+                    return element.name === nameOrIndex;
+                });
+            }
+
+            if(index < 0) {
+                console.log('Node with name or index of ' + nameOrIndex + ' not found');
+                return null;
+            }
+
+            const root = this.file.nodes[index];
+            await this.parseNodeTree(meshes, mat4.create(), root);
+        }
 
         return new Model(this.gl, meshes);
     }
@@ -49,9 +58,9 @@ export class GltfFile {
     async parseNodeTree(meshes, parentMatrix, node) {
         let matrix = node.matrix !== undefined ? mat4.fromValues(...node.matrix) : mat4.create();
 
-        const translation = node.translation !== undefined ? vec3.clone(node.translation) : vec3.fromValues(0, 0, 0);
-        const rotation = node.rotation !== undefined ? quat.clone(node.rotation) : quat.fromValues(0, 0, 0, 1);
-        const scale = node.scale !== undefined ? vec3.clone(node.scale) : vec3.fromValues(1, 1, 1);
+        const translation = node.translation !== undefined ? vec3.fromValues(...node.translation) : vec3.fromValues(0, 0, 0);
+        const rotation = node.rotation !== undefined ? quat.fromValues(...node.rotation) : quat.fromValues(0, 0, 0, 1);
+        const scale = node.scale !== undefined ? vec3.fromValues(...node.scale) : vec3.fromValues(1, 1, 1);
         const m = mat4.fromRotationTranslationScale(matrix, rotation, translation, scale);
         mat4.multiply(matrix, matrix, m);
         mat4.multiply(matrix, parentMatrix, matrix);

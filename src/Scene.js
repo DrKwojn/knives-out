@@ -15,13 +15,19 @@ import { MazeBuilder } from "./MazeBuilder.js";
 export class Scene {
     constructor(game) {
         this.game = game;
+
         this.entities = [];
         this.newEntities = [];
+
+        this.enemyCount = 4;
 
         this.debugDraw = false;
     }
 
-    async init() {
+    async init(gridSize) {
+        this.entities = [];
+        this.newEntities = [];
+
         this.physics = new Physics(this);
 
         console.log(this.game.programs);
@@ -43,24 +49,16 @@ export class Scene {
         this.physicsRenderer = new PhysicsDebugRenderer(this.game.gl, this.game.programs);
         this.physicsRenderer.camera = this.cameraEntity.camera;
 
-        const mazeSize = 11; // odd number
+        const mazeSize = gridSize;
         const maze = new MazeBuilder(Math.floor(mazeSize/2), Math.floor(mazeSize/2));
         const mapGrid = maze.maze.flat();
-
-        // const mapGrid = [
-        //     1, 1, 1, 1, 1,
-        //     1, 0, 0, 0, 1,
-        //     1, 0, 1, 0, 1,
-        //     1, 0, 0, 0, 1,
-        //     1, 1, 1, 0, 1
-        // ];
 
         this.addEntity(new MapEntity(mapGrid, mazeSize));
         
         let enemyEntity;
         let x, y;
-        const enemyCount = 4;
-        for (let i = 0; i < enemyCount; i++) {
+        this.enemyCount = 4;
+        for (let i = 0; i < this.enemyCount; i++) {
             [x, y] = [0, 0];
             while (mapGrid[y * mazeSize + x] === 1) {
                 x = Math.floor(Math.random() * mazeSize);
@@ -74,6 +72,8 @@ export class Scene {
             this.addEntity(lightEntity);
             this.renderer.lights.push(lightEntity);
         }
+
+        this.game.forceResize();
     }
 
     async update(delta) {
