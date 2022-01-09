@@ -58,8 +58,6 @@ class Application {
         // HUD
         scoreboard[2].innerHTML = this.score;
         this.displayTimeLeft(this.gameTime * 1000);
-
-        //this.displayGameOver();
     }
 
     enable() {
@@ -193,15 +191,13 @@ class Application {
         this._resize();
     }
 
-    displayTimeLeft(miliseconds) {
-        let time = new Date(miliseconds);
-        let minutes = time.getMinutes().toString();
-        let seconds = time.getSeconds().toString();
-        scoreboard[1].innerHTML = minutes.concat(":", seconds);
+    displayTimeLeft(milliseconds) {
+        scoreboard[1].innerHTML = new Date(milliseconds).toISOString().slice(14,19);
     }
 
     displayGameOver() {
         document.getElementsByClassName('gameover')[0].style.display = "block";
+        document.exitPointerLock();
     }
 }
 
@@ -217,11 +213,12 @@ document.getElementById('startBtn').addEventListener("click", function() {
 });
 
 document.getElementById('playAgainBtn').addEventListener('click', function() {
-    // reset game
-    document.getElementsByClassName('mainmenu')[0].style.display = "none";
-    document.getElementsByClassName('scoreboard')[0].style.visibility = "visible";
+    document.getElementsByClassName('gameover')[0].style.display = "none";
 
     const canvas = document.querySelector('canvas');
     const app = new Application(canvas);
     app.enableCamera();
+
+    const gui = new GUI();
+    gui.add(app, 'enableCamera');
 });
